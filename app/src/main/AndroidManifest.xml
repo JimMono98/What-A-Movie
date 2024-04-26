@@ -7,16 +7,19 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="RevFilm"
+        android:label="revfilm"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Basde.Theme.Project1763"
         tools:targetApi="31">
         <activity
-            android:name="advhci.ihu.gr.RevFilm.ui.theme.LoginActivity"
+            android:name=".ui.theme.MainActivity"
             android:exported="false" />
         <activity
-            android:name="advhci.ihu.gr.RevFilm.ui.theme.MainActivity"
+            android:name=".ui.theme.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.theme.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

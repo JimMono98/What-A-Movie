@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/main_color"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_height="match_parent"
     tools:context=".ui.theme.LoginActivity">
 
@@ -25,8 +27,7 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="128dp"
                 android:layout_marginStart="32dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editTextText"
@@ -35,7 +36,7 @@
                 android:hint="Username"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
+                android:textColorHint="@color/white"
                 android:ems="10"
                 android:background="@drawable/edittext_background"
                 android:layout_marginTop="128dp"
@@ -51,7 +52,7 @@
                 android:hint="Password"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
+                android:textColorHint="@color/white"
                 android:ems="10"
                 android:background="@drawable/edittext_background"
                 android:layout_marginTop="32dp"
@@ -72,7 +73,7 @@
                 />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/loginBtn"
                 style="@android:style/Widget.Button"
                 android:layout_marginTop="64dp"
                 android:layout_marginStart="32dp"

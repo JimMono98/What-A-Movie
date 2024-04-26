@@ -1,4 +1,4 @@
-package advhci.ihu.gr.RevFilm.ui.theme
+package Advhci.ihu.gr.RevFilm.ui.theme
 
 import android.app.Activity
 import android.os.Build

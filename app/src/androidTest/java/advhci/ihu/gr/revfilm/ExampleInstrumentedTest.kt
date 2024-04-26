@@ -1,4 +1,4 @@
-package advhci.ihu.gr.RevFilm
+package Advhci.ihu.gr.RevFilm
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

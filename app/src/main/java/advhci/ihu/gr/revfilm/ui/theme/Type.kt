@@ -1,4 +1,4 @@
-package advhci.ihu.gr.RevFilm.ui.theme
+package Advhci.ihu.gr.RevFilm.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

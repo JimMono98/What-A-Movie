@@ -1,4 +1,4 @@
-package advhci.ihu.gr.RevFilm
+package Advhci.ihu.gr.RevFilm
 
 import org.junit.Test
 

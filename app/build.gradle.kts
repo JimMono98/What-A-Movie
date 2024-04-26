@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "advhci.ihu.gr.RevFilm"
+    namespace = "advhci.ihu.gr.revfilm"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "advhci.ihu.gr.RevFilm"
+        applicationId = "advhci.ihu.gr.revfilm"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
