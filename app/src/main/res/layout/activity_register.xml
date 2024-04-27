@@ -7,7 +7,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:layout_height="match_parent"
-    tools:context=".ui.theme.LoginActivity">
+    tools:context=".ui.theme.RegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log In"
+                android:text="Register Now!"
                 android:textSize="50sp"
                 android:textColor="@color/white"
                 android:layout_marginTop="128dp"
@@ -30,10 +30,10 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/reg_email"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="Username"
+                android:hint="Email"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -46,7 +46,7 @@
                 />
 
             <EditText
-                android:id="@+id/editTextPassword"
+                android:id="@+id/reg_pass"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="Password"
@@ -61,19 +61,16 @@
                 android:inputType="textPassword"
                 />
 
-            <TextView
-                android:id="@+id/textView6"
+            <ProgressBar
+                android:id="@+id/reg_progbar"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Forgot Your Password?"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                />
+                android:layout_height="match_parent">
+            </ProgressBar>
+
 
             <Button
-                android:id="@+id/loginBtn"
+                android:id="@+id/reg_btn"
                 style="@android:style/Widget.Button"
                 android:layout_marginTop="64dp"
                 android:layout_marginStart="32dp"
@@ -84,27 +81,28 @@
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login" />
+                android:text="Register" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/textView14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Don't Have an Account?"
+                android:text="Already A User?"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textAlignment="center"
                 android:layout_marginTop="32dp"/>
 
             <TextView
-                android:id="@+id/linkTextView2"
+                android:id="@+id/linkTextView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Register Now"
+                android:text="LogIn"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
+
                 />
 
         </LinearLayout>

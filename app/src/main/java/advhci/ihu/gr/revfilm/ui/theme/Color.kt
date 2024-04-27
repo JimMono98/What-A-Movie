@@ -1,4 +1,4 @@
-package Advhci.ihu.gr.RevFilm.ui.theme
+package advhci.ihu.gr.revfilm.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

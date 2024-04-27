@@ -1,4 +1,4 @@
-package Advhci.ihu.gr.RevFilm.ui.theme
+package advhci.ihu.gr.revfilm.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Project1763Theme(
+fun revfilm(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RevFilm"
+rootProject.name = "revifilm"
 include(":app")
  

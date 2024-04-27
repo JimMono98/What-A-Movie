@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var userEdt: EditText
@@ -30,13 +32,22 @@ class LoginActivity : AppCompatActivity() {
             val password = passEdt.text.toString()
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill in your username and password", Toast.LENGTH_SHORT).show()
-            } else if (username == "test" && password == "test") {
+                Toast.makeText(
+                    this,
+                    "Please fill in your username and password",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else if (username == "test" && password == "test") {
                 startActivity(Intent(this, MainActivity::class.java))
                 // Replace MainActivity::class.java with your desired destination activity
-            } else {
+            }else {
                 Toast.makeText(this, "Incorrect username or password", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        val linkTextView = findViewById<TextView>(R.id.linkTextView2)
+        linkTextView.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
         }
     }
 }

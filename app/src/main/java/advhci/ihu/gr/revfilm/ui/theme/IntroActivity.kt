@@ -20,7 +20,7 @@ class IntroActivity : AppCompatActivity() {
 
         val getInBtn: Button = findViewById(R.id.getInBtn)
         getInBtn.setOnClickListener {
-            startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }
