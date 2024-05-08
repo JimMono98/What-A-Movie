@@ -4,8 +4,7 @@ Android Mobile App - Film Review App - What a Movie!
 Firebase για την πιστοποίηση χρήστη καθώς και Firebase Firestore για διαχείριση και άλλων λειτουργιών. 
 Ενσωμάτωση των δεδομένων του TMDb API - The Movie Database. Ως φυσική λειτουργία επιλέγω το WiFi ( με Offline Modal ).
 Αρχιτεκτονική MVVM
-
-Όπως σας είχα αναφέρει και σε παλιότερη επικοινωνία μέσω mail με ενδιαφέρει η υλοποίηση ενός Android App Αξιολόγησης ταινιων. 
+ 
 Σαν Welcome Page θα υπάρχουν τρεις επιλογές ( Log in, Register, Forgot Password ). 
 Με το Log in, ο χρήστης θα μπορεί να εξερευνήσει τις λειτουργίες της εφαρμογής ( likes, comments, questions κ.α. ). 
 Θα μπορεί να ανατρέξει στο ιστορικό των δραστηριοτήτων του, να έχει το προσωπικό του Profile καθώς και ενα tab με τα αγαπημένες ταινίες.
