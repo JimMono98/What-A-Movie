@@ -44,6 +44,7 @@ import com.jimmono.whatamovie.ui.theme.font
 import com.jimmono.whatamovie.util.BottomNavRoute
 import com.jimmono.whatamovie.util.Constants
 
+
 data class BottomNavigationItem(
     val title: String,
     val selectedIcon: ImageVector,

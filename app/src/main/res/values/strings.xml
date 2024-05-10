@@ -7,10 +7,10 @@
     <string name="top_rated">Top Rated</string>
     <string name="tv_series">TV Series</string>
     <string name="recommended">Recommended</string>
-    <string name="special">Special ✨</string>
-    <string name="watch_list">Watch List 🌟</string>
-    <string name="favorites">Favorite ❤️</string>
-    <string name="similar">Similar ✨</string>
+    <string name="special">Special </string>
+    <string name="watch_list">Watch List </string>
+    <string name="favorites">Favorite </string>
+    <string name="similar">Similar </string>
     <string name="drawer">Drawer</string>
     <string name="search">Search</string>
     <string name="see_all">See All</string>
@@ -27,7 +27,7 @@
     <string name="watch_trailer">Watch Trailer</string>
     <string name="overview">Overview</string>
     <string name="no_video_is_available_at_the_moment">No video is available at the moment. 🥺</string>
-    <string name="similar_to">Similar to\n✨ %1$s ✨</string>
+    <string name="similar_to">Similar to\n- %1$s -</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="couldn_t_load_genres">Couldn\'t load genres</string>
 
