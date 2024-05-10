@@ -1,5 +1,8 @@
 package com.jimmono.whatamovie.main.data.local.media
 
+//Data Access Object
+//Noting Null cuz its our local database.
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy

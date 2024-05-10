@@ -5,6 +5,12 @@ import com.jimmono.whatamovie.main.data.local.media.MediaEntity
 import com.jimmono.whatamovie.main.data.remote.dto.MediaDto
 import com.jimmono.whatamovie.main.domain.models.Media
 
+// different purpose about movie list , making different objects for better handling
+// extension function of media
+// not easy to store list so we store strings.
+// jointostrings join in one string.
+// String to a list of integers -> listof(...).map so i get a bunch of integers
+
 fun MediaEntity.toMedia(
     type: String,
     category: String

@@ -146,7 +146,7 @@ class MainViewModel @Inject constructor(
 
                         // calling it to have equal top rated and tv series items,
                         // because loadTopRatedMovies() and loadPopularTvSeries() are already
-                        // used to create the tvSeries list. So if i don't call it here I we will
+                        // used to create the tvSeries list. So if i don't call it here we will
                         // have more TopRated items than Popular ones.
                         loadPopularTvSeries(
                             fetchFromRemote = true,
@@ -182,7 +182,7 @@ class MainViewModel @Inject constructor(
 
                         // calling it to have equal top rated and tv series items,
                         // because loadTopRatedMovies() and loadPopularTvSeries() are already
-                        // used to create the tvSeries list. So if i don't call it here I we will
+                        // used to create the tvSeries list. So if i don't call it here we will
                         // have more TopRated items than Popular ones.
                         loadPopularTvSeries(true)
                     }

@@ -16,6 +16,10 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Dagger Hilt - Dependency injection
+// Flow -> Sequence of actions
+// Data Layer for the App. from local database to get answers from api.
+
 @Singleton
 class MediaRepositoryImpl @Inject constructor(
     private val mediaApi: MediaApi,
@@ -62,10 +66,15 @@ class MediaRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<Media>>> {
         return flow {
 
+
+
             emit(Resource.Loading(true))
 
             val localMediaList = mediaDao.getMediaListByTypeAndCategory(type, category)
 
+            // load the movies from database first
+            // in case is not empty or we dont forcerefresh or fetch so we return a list of movies
+            // if thats false we get results from api with some exceptions.
             val shouldJustLoadFromCache =
                 localMediaList.isNotEmpty() && !fetchFromRemote && !isRefresh
             if (shouldJustLoadFromCache) {
@@ -89,6 +98,7 @@ class MediaRepositoryImpl @Inject constructor(
                 searchPage = 1
             }
 
+            //parsing the type,cate... to the api call
             val remoteMediaList = try {
                 mediaApi.getMoviesAndTvSeriesList(
                     type, category, searchPage, apiKey
@@ -104,6 +114,7 @@ class MediaRepositoryImpl @Inject constructor(
                 emit(Resource.Loading(false))
                 return@flow
             }
+
 
             remoteMediaList.let { mediaList ->
                 val media = mediaList.map {

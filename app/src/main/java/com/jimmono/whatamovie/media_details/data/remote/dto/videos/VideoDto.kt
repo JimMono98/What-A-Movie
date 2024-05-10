@@ -1,5 +1,8 @@
 package com.jimmono.whatamovie.media_details.data.remote.dto.videos
 
+// Data Transfare Object
+//Jason To Kotlin Class
+
 data class VideoDto(
     val id: String,
     val iso_3166_1: String,

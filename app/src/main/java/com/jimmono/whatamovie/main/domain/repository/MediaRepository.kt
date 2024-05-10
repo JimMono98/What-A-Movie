@@ -4,6 +4,8 @@ import com.jimmono.whatamovie.util.Resource
 import com.jimmono.whatamovie.main.domain.models.Media
 import kotlinx.coroutines.flow.Flow
 
+// Flow -> Sequence of actions
+
 interface MediaRepository {
 
     suspend fun updateItem(media: Media)
@@ -17,6 +19,7 @@ interface MediaRepository {
     ): Media
 
     suspend fun getMoviesAndTvSeriesList(
+        //force fetch so we can move down and get more movies
         fetchFromRemote: Boolean,
         isRefresh: Boolean,
         type: String,

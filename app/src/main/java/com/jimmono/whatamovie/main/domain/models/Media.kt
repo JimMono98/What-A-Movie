@@ -3,6 +3,8 @@ package com.jimmono.whatamovie.main.domain.models
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+//Cant be null on our database.
+
 @Parcelize
 data class Media(
     val adult: Boolean,

@@ -3,6 +3,7 @@ package com.jimmono.whatamovie.main.presentation.main
 import com.jimmono.whatamovie.main.domain.models.Genre
 import com.jimmono.whatamovie.main.domain.models.Media
 
+//the pages we took from api and we have on our database.
 data class MainUiState(
 
     val popularMoviesPage: Int = 1,

@@ -1,5 +1,10 @@
 package com.jimmono.whatamovie.main.data.remote.dto
 
+// Data Transfare Object
+//Jason To Kotlin Class
+//No Problem to get some null answers.
+
+
 data class MediaDto(
     val adult: Boolean? = null,
     val backdrop_path: String? = null,

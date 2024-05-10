@@ -18,6 +18,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+//Dependency Injection package.
+
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
@@ -30,6 +32,7 @@ class AppModule {
         .addInterceptor(interceptor)
         .build()
 
+    // we provide our databases.
     @Provides
     @Singleton
     fun provideGenreDatabase(app: Application): GenresDatabase {
@@ -49,6 +52,8 @@ class AppModule {
             "mediadb.db"
         ).build()
     }
+
+    // we provide our APIs.
 
     @Singleton
     @Provides

@@ -50,9 +50,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            displayNotification()
             TheMoviesTheme {
-
-
 
                 val mainViewModel = hiltViewModel<MainViewModel>()
                 val mainUiState = mainViewModel.mainUiState.collectAsState().value
@@ -67,17 +66,6 @@ class MainActivity : ComponentActivity() {
                     mainUiState = mainUiState,
                     onEvent = mainViewModel::onEvent
                 )
-
-                if (ContextCompat.checkSelfPermission(
-                        this@MainActivity,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    requestNotificationPermission()
-                } else {
-                    displayNotification() // Display notification if permission granted
-                }
-
             }
         }
 
@@ -107,7 +95,7 @@ class MainActivity : ComponentActivity() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Hi from What A Movie!")
+            .setContentTitle("Welcome to What A Movie!")
             .setContentText("Just A Normal Notification")
             .setSmallIcon(R.drawable.ic_series)
             .setContentIntent(pendingIntent)
@@ -231,6 +219,7 @@ fun Navigation(
             arguments = listOf(
                 navArgument("videoId") { type = NavType.StringType }
             )
+
         ) {
 
             val videoId = it.arguments?.getString("videoId") ?: ""
