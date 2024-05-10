@@ -1,12 +1,25 @@
 package com.jimmono.whatamovie.main.presentation.main
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -14,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.jimmono.whatamovie.R
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsScreenEvents
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsViewModel
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailScreen
@@ -27,12 +41,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val channelId = "What A Movie"
+    private val notificationId = 1001
+    private val REQUEST_CODE_PERMISSIONS = 101 // Choose a unique request code
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             TheMoviesTheme {
+
+
 
                 val mainViewModel = hiltViewModel<MainViewModel>()
                 val mainUiState = mainViewModel.mainUiState.collectAsState().value
@@ -48,9 +68,77 @@ class MainActivity : ComponentActivity() {
                     onEvent = mainViewModel::onEvent
                 )
 
+                if (ContextCompat.checkSelfPermission(
+                        this@MainActivity,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    requestNotificationPermission()
+                } else {
+                    displayNotification() // Display notification if permission granted
+                }
+
             }
         }
 
+    }
+
+    fun requestNotificationPermission() {
+        val permissions = arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+        val activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { grantResults ->
+            val allPermissionsGranted = grantResults.values.all { it }
+            if (allPermissionsGranted) {
+                displayNotification()
+            } else {
+                // Handle case where permission is denied (e.g., show a message)
+            }
+        }
+        activityResultLauncher.launch(permissions)
+    }
+
+    fun displayNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel() // Ensure channel is created before displaying notification
+        }
+
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setContentTitle("Hi from What A Movie!")
+            .setContentText("Just A Normal Notification")
+            .setSmallIcon(R.drawable.ic_series)
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)) {
+            if (ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notify(notificationId, builder.build())
+            } else {
+                requestNotificationPermission()
+            }
+        }
+
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel() {
+        val name = "My Notification Channel" // Replace with a user-friendly name
+        val descriptionText = "Channel description" // Optional description
+        val importance = NotificationManager.IMPORTANCE_DEFAULT // Adjust importance as needed
+
+        val channel = NotificationChannel(channelId, name, importance).apply {
+            description = descriptionText
+        }
+
+        val notificationManager: NotificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }
 
@@ -154,7 +242,6 @@ fun Navigation(
         }
     }
 }
-
 
 
 

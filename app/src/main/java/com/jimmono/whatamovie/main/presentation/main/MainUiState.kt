@@ -45,4 +45,5 @@ data class MainUiState(
     val moviesGenresList: List<Genre> = emptyList(),
     val tvGenresList: List<Genre> = emptyList(),
 
+
 )

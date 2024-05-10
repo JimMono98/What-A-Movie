@@ -65,6 +65,7 @@ dependencies {
     implementation 'androidx.compose.material:material:1.5.4'
     implementation 'androidx.paging:paging-common-ktx:3.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation libs.androidx.appcompat
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -139,6 +140,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test:core-ktx:1.5.0'
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
-    androidTestImplementation "io.mockk:mockk-android:1.10.5"
+    androidTestImplementation libs.mockk.android
     androidTestImplementation 'androidx.test:runner:1.5.2'
+
 }
