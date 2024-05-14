@@ -83,6 +83,15 @@ fun UserScreen(
                 }
 
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CButton(
+                text = "Log Out",
+                onClick = {
+                }
+
+            )
         }
     }
 }
