@@ -128,8 +128,8 @@ fun UserScreen(
             // Edit profile button
             Button(
                 onClick = {
-                    // Handle edit profile click
-                },
+                    navController.navigate(Route.EDIT_PROFILE)
+                          },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier

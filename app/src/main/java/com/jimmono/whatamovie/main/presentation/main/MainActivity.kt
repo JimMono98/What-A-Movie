@@ -97,8 +97,11 @@ fun Navigation(
         }
         composable(Route.SIGNUP_SCREEN){
             SignupScreen(navController = navController, mainUiState = MainUiState()) {}
-
         }
+        composable(Route.EDIT_PROFILE){
+            EditProfile(navController = navController, mainUiState = MainUiState()) {}
+        }
+
 
         composable(
             "${Route.MEDIA_DETAILS_SCREEN}?id={id}&type={type}&category={category}",
