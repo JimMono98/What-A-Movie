@@ -69,9 +69,10 @@ fun Navigation(
     val mediaDetailsScreenState =
         mediaDetailsViewModel.mediaDetailsScreenState.collectAsState().value
 
+
     NavHost(
         navController = navController,
-        startDestination = Route.WELCOME_SCREEN
+        startDestination = Route.MEDIA_MAIN_SCREEN
     ) {
 
         composable(Route.MEDIA_MAIN_SCREEN) {

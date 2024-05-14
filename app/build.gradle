@@ -4,6 +4,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -66,6 +67,8 @@ dependencies {
     implementation 'androidx.paging:paging-common-ktx:3.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation libs.androidx.appcompat
+    implementation libs.firebase.auth.ktx
+    implementation libs.firebase.auth
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

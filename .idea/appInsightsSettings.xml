@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.jimmono.whatamovie" />
+                  <option name="mobileSdkAppId" value="1:1013230179371:android:0d26214888426d6cd2066e" />
+                  <option name="projectId" value="what-a-movie-a835d" />
+                  <option name="projectNumber" value="1013230179371" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

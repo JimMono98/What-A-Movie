@@ -108,10 +108,3 @@ fun WelcomeScreen(
     }
 
 }
-
-
-@Composable
-fun WelcomeScreenPreview() {
-    WelcomeScreen(navController = rememberNavController(), mainUiState = MainUiState()) {}
-
-    }

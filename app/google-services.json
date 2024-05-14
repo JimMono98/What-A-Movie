@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1013230179371",
+    "project_id": "what-a-movie-a835d",
+    "storage_bucket": "what-a-movie-a835d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013230179371:android:0d26214888426d6cd2066e",
+        "android_client_info": {
+          "package_name": "com.jimmono.whatamovie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgcNYf5MpLLMyGTFRp4jZZQaE55IU2QJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

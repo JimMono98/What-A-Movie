@@ -209,37 +209,6 @@ fun BottomNavigationScreens(
     }
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun UserScreen(
-    navController: NavController,
-    bottomBarNavController: NavHostController,
-    mainUiState: MainUiState,
-    onEvent: (MainUiEvents) -> Unit
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "User Profile")
-                }
-            )
-        }
-    ) {
-        // Content of the User Screen
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Placeholder content for user profile
-            Text(text = "User Profile Content Goes Here")
-        }
-    }
-}
-
 
 
 
