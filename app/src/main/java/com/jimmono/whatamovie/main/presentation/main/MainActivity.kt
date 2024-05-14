@@ -64,13 +64,14 @@ fun Navigation(
 ) {
     val navController = rememberNavController()
 
+
     val mediaDetailsViewModel = hiltViewModel<MediaDetailsViewModel>()
     val mediaDetailsScreenState =
         mediaDetailsViewModel.mediaDetailsScreenState.collectAsState().value
 
     NavHost(
         navController = navController,
-        startDestination = Route.MEDIA_MAIN_SCREEN
+        startDestination = Route.WELCOME_SCREEN
     ) {
 
         composable(Route.MEDIA_MAIN_SCREEN) {
@@ -86,6 +87,16 @@ fun Navigation(
                 navController = navController,
                 mainUiState = mainUiState,
             )
+        }
+        composable(Route.LOGIN_SCREEN){
+            LoginScreen(navController = navController, mainUiState = MainUiState()) {}
+        }
+        composable(Route.WELCOME_SCREEN) {
+            WelcomeScreen(navController = navController, mainUiState = MainUiState()) {}
+        }
+        composable(Route.SIGNUP_SCREEN){
+            SignupScreen(navController = navController, mainUiState = MainUiState()) {}
+
         }
 
         composable(

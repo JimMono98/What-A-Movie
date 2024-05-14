@@ -2,6 +2,9 @@ package com.jimmono.whatamovie.util
 
 
 object Route {
+    const val WELCOME_SCREEN = "welcome_screen"
+    const val LOGIN_SCREEN = "login_screen"
+    const val SIGNUP_SCREEN = "signup_screen"
     const val SEARCH_SCREEN = "search_screen"
     const val MEDIA_MAIN_SCREEN = "media_main_screen"
     const val SIMILAR_MEDIA_LIST_SCREEN = "similar_media_list_screen"
