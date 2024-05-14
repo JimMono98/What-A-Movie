@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,10 +27,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.SignInMethodQueryResult
 import com.jimmono.whatamovie.R
 import com.jimmono.whatamovie.util.ui_shared_components.CTextField
 import com.jimmono.whatamovie.util.ui_shared_components.CButton
@@ -119,13 +122,14 @@ fun LoginScreen(
                 CTextField(
                     value = email,
                     onValueChange = { email = it },
-                    hint = "Email Address"
+                    hint = "Email Address",
                 )
 
                 CTextField(
                     value = password,
                     onValueChange = { password = it },
                     hint = "Password",
+                    visualTransformation = PasswordVisualTransformation(),
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

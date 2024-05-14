@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
 
@@ -127,6 +128,8 @@ fun SignupScreen(
                     hint = "Password",
                     value = password,
                     onValueChange = { password = it },
+                    visualTransformation = PasswordVisualTransformation()
+
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
