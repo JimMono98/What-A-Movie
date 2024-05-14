@@ -72,7 +72,7 @@ fun Navigation(
 
     NavHost(
         navController = navController,
-        startDestination = Route.MEDIA_MAIN_SCREEN
+        startDestination = Route.WELCOME_SCREEN
     ) {
 
         composable(Route.MEDIA_MAIN_SCREEN) {

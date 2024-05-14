@@ -1,6 +1,7 @@
 package com.jimmono.whatamovie.main.presentation.main
 
 import android.content.ContentValues
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import com.jimmono.whatamovie.util.Route
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
 
@@ -50,6 +52,14 @@ fun SignupScreen(
 
     // Firebase authentication instance
     val auth = FirebaseAuth.getInstance()
+    val context = LocalContext.current
+    var toastMessage by remember { mutableStateOf<String?>(null) }
+
+    // Display the toast message if it's not null
+    toastMessage?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        toastMessage = null
+    }
 
     Surface(
         color = Color(0xFF253334),
@@ -126,10 +136,13 @@ fun SignupScreen(
                     text = "Sign Up",
                     onClick = {
                         // Perform registration logic
-                        registerUser(auth, email, password)
-                        navController.navigate(Route.LOGIN_SCREEN)
+                        registerUser(auth, email, password) { message ->
+                            toastMessage = message
+                            if (message.contains("success")) {
+                                navController.navigate(Route.LOGIN_SCREEN)
+                            }
+                        }
                     }
-
                 )
 
                 Row(
@@ -162,24 +175,24 @@ fun SignupScreen(
     }
 }
 
-fun registerUser(auth: FirebaseAuth, email: String, password: String) {
+fun registerUser(auth: FirebaseAuth, email: String, password: String, callback: (String) -> Unit) {
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Timber.tag(ContentValues.TAG).d("createUserWithEmail:success")
+                callback("Registration successful! Verification email sent.")
                 FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
-                    ?.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
+                    ?.addOnCompleteListener { verificationTask ->
+                        if (verificationTask.isSuccessful) {
                             Timber.tag(ContentValues.TAG).d("Email sent.")
-
                         }
                     }
             } else {
                 // If sign in fails, display a message to the user.
                 Timber.tag(ContentValues.TAG).w(task.exception, "createUserWithEmail:failure")
-
-
+                callback("Registration failed: ${task.exception?.message}")
             }
         }
 }
+

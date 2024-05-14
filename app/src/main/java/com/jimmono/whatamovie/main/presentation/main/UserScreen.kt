@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
@@ -20,13 +19,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.jimmono.whatamovie.util.Route
-import com.jimmono.whatamovie.util.ui_shared_components.CButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import com.google.firebase.auth.FirebaseAuth
+import com.jimmono.whatamovie.ui.theme.font
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.rememberImagePainter
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -36,16 +46,18 @@ fun UserScreen(
     mainUiState: MainUiState,
     onEvent: (MainUiEvents) -> Unit,
 ) {
+    val auth = FirebaseAuth.getInstance()
+    val user = auth.currentUser
+    val context = LocalContext.current
+    var toastMessage by remember { mutableStateOf<String?>(null) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "User Profile")
-                }
-            )
-        }
-    ) {
+    // Display the toast message if it's not null
+    toastMessage?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        toastMessage = null
+    }
+
+    Scaffold() {
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -53,45 +65,101 @@ fun UserScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // User profile image (if available)
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Icon(
+            // User profile image (if available)
+            user?.photoUrl?.let {
+                Image(
+                    painter = rememberImagePainter(data = it),
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray),
+                    contentScale = ContentScale.Crop
+                )
+            } ?: run {
+                Icon(
                     imageVector = Icons.Filled.Person,
                     contentDescription = "Profile picture placeholder",
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)
+                        .background(Color.Gray)
                 )
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             // User name
-            Text(
-                text = "name",
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Username: ",
+                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                )
+                Text(
+                    text = user?.displayName ?: "No Name",
+                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             // User email
-            Text(text = "email")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Email: ",
+                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                )
+                Text(
+                    text = user?.email ?: "No Email",
+                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-            // Edit profile button (optional)
-            CButton(
-                text = "Edit Profile",
+            // Edit profile button
+            Button(
                 onClick = {
-                }
+                    // Handle edit profile click
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(200.dp)
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
+            }
 
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CButton(
-                text = "Log Out",
+            // Logout button
+            Button(
                 onClick = {
-                }
-
-            )
+                    auth.signOut()
+                    navController.navigate(Route.LOGIN_SCREEN) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                    toastMessage = "Logged out successfully"
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(200.dp)
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+            }
         }
     }
 }
