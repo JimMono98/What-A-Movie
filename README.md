@@ -5,9 +5,9 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 Ενσωμάτωση των δεδομένων του TMDb API - The Movie Database. Ως φυσική λειτουργία επιλέγω το WiFi. Θα υπαρχει ενα Welcome Notification.
 Αρχιτεκτονική MVVM
  
-Σαν Welcome Page θα υπάρχουν τρεις επιλογές ( Log in, Register, Forgot Password ). 
-Με το Log in, ο χρήστης θα μπορεί να εξερευνήσει τις λειτουργίες της εφαρμογής ( likes, comments, questions κ.α. ). 
-Για την ευχρηστία του χρήστη θα προστεθεί ενα About tab και Help tab, οδηγώντας στην δημιουργία 5+ διαφορετικών tabs.
+Σαν Welcome Page θα υπάρχουν τρεις επιλογές ( Log in, Register). 
+Με το Log in, ο χρήστης θα μπορεί να εξερευνήσει τις λειτουργίες της εφαρμογής. 
+Οδηγώντας στην δημιουργία 5+ διαφορετικών tabs.
 
 
 ![image](https://github.com/JimMono69/RevFilm/assets/149162918/66d97372-608d-494b-8660-1c5314719b2e)
