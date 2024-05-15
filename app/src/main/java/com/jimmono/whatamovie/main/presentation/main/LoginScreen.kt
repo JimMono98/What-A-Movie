@@ -107,7 +107,7 @@ fun LoginScreen(
                 )
 
                 Text(
-                    "Sign In now to access your exercises and saved music.",
+                    "Sign In now to access to our platform.",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = font,

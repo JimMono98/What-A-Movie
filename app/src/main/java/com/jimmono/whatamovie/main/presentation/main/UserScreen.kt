@@ -34,6 +34,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberImagePainter
@@ -45,6 +46,7 @@ fun UserScreen(
     bottomBarNavController: NavHostController,
     mainUiState: MainUiState,
     onEvent: (MainUiEvents) -> Unit,
+
 ) {
     val auth = FirebaseAuth.getInstance()
     val user = auth.currentUser
@@ -55,6 +57,7 @@ fun UserScreen(
     toastMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         toastMessage = null
+
     }
 
     Scaffold() {

@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsScreenEvents
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsViewModel
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailScreen
@@ -32,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
 
         setContent {
             NotificationPermission(this).displayNotification()

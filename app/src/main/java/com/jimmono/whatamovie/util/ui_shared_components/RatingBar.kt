@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import com.google.android.play.integrity.internal.i
 import com.jimmono.whatamovie.R
 import com.jimmono.whatamovie.ui.theme.yellow
 
@@ -16,7 +17,8 @@ fun RatingBar(
     rating: Double = 0.0,
     stars: Int = 5,
     starsColor: Color = yellow,
-) {
+
+    ) {
 
     val filledStars = kotlin.math.floor(rating).toInt()
     val unfilledStars = (stars - kotlin.math.ceil(rating)).toInt()
@@ -48,4 +50,5 @@ fun RatingBar(
             )
         }
     }
+
 }

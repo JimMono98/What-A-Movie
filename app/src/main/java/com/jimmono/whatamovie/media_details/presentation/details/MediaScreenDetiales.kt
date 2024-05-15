@@ -21,7 +21,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -34,7 +37,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,8 +60,12 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.jimmono.whatamovie.R
 import com.jimmono.whatamovie.main.data.remote.api.MediaApi
+import com.jimmono.whatamovie.main.data.remote.firestore.Review
 import com.jimmono.whatamovie.main.domain.models.Media
 import com.jimmono.whatamovie.media_details.presentation.details.detailScreenUiComponents.MovieImage
 import com.jimmono.whatamovie.theme.SmallRadius
@@ -65,9 +74,13 @@ import com.jimmono.whatamovie.util.Constants
 import com.jimmono.whatamovie.util.Route
 import com.jimmono.whatamovie.util.ui_shared_components.Item
 import com.jimmono.whatamovie.util.ui_shared_components.RatingBar
+import com.jimmono.whatamovie.util.ui_shared_components.RatingChange
 import com.jimmono.whatamovie.util.ui_shared_components.genresProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -89,6 +102,7 @@ fun MediaDetailScreen(
     }
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
+    var isReviewSectionVisible by remember { mutableStateOf(true) }
 
     val imageUrl = "${MediaApi.IMAGE_BASE_URL}${media.backdropPath}"
 
@@ -98,6 +112,34 @@ fun MediaDetailScreen(
             .size(Size.ORIGINAL)
             .build()
     )
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    fun submitReview(movieTitle: String, rating: Float, comment: String) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val review = Review(
+                userId = currentUser.uid,
+                userName = currentUser.displayName ?: "Anonymous",
+                movieTitle = movieTitle,
+                rating = rating,
+                comment = comment
+            )
+            coroutineScope.launch {
+                FirebaseFirestore.getInstance().collection("reviews")
+                    .add(review)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
+                        isReviewSectionVisible = false
+
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to submit review", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        } else {
+            Toast.makeText(context, "Please log in to submit a review", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val surface = MaterialTheme.colorScheme.surface
     var averageColor by remember {
@@ -166,6 +208,15 @@ fun MediaDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Rating(media = media)
+
+            if (isReviewSectionVisible) {
+                ReviewSection(media = media) { rating, comment ->
+                    submitReview(media.title, rating, comment)
+                }
+            }
+
+            ReviewList(movieTitle = media.title)
         }
 
         PullRefreshIndicator(
@@ -493,6 +544,140 @@ fun SimilarMediaSection(
         }
     }
 }
+@Composable
+fun Rating(
+    media: Media
+) {
+    Column {
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            modifier = Modifier.padding(horizontal = 22.dp),
+            text = stringResource(R.string.rating),
+            fontFamily = font,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+            lineHeight = 16.sp
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.padding(
+                    horizontal = 4.dp
+                ),
+                text = "Average Rating from IMDb :",
+                fontFamily = font,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Text(
+                modifier = Modifier.padding(
+                    horizontal = 4.dp
+                ),
+                text = media.voteAverage.toString().take(3),
+                fontFamily = font,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            RatingBar(
+                modifier = Modifier,
+                starsModifier = Modifier.size(30.dp),
+                rating = media.voteAverage.div(2)
+            )
+
+        }
+
+    }
+}
+
+@Composable
+fun ReviewSection(
+    media: Media,
+    onSubmitReview: (Float, String) -> Unit
+) {
+    var rating by remember { mutableStateOf(0f) }
+    var comment by remember { mutableStateOf("") }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Rate and Review", color = MaterialTheme.colorScheme.onSurface)
+        Spacer(modifier = Modifier.height(8.dp))
+        RatingChange(
+            rating = rating,
+            onRatingChange = { rating = it }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = comment,
+            onValueChange = { comment = it },
+            label = { Text("Comment") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = {
+
+            onSubmitReview(rating, comment)
+
+        }) {
+            Text("Submit Review")
+        }
+    }
+}
+@Composable
+fun ReviewItem(review: Review) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = review.userName, color = MaterialTheme.colorScheme.onSurface)
+            Spacer(modifier = Modifier.height(4.dp))
+            RatingChange(
+                rating = review.rating,
+                onRatingChange = {}, // This can be ignored for display purposes
+                modifier = Modifier,
+                starSize = 16.dp,
+                spaceBetween = 2.dp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = review.comment)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date()),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+@Composable
+fun ReviewList(movieTitle: String) {
+    val reviews = remember { mutableStateListOf<Review>() }
+    val db = FirebaseFirestore.getInstance()
+
+    LaunchedEffect(movieTitle) {
+        db.collection("reviews")
+            .whereEqualTo("movieTitle", movieTitle)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { value, error ->
+                if (error == null && value != null) {
+                    reviews.clear()
+                    reviews.addAll(value.toObjects(Review::class.java))
+                }
+            }
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Reviews", color = MaterialTheme.colorScheme.onSurface)
+        Spacer(modifier = Modifier.height(8.dp))
+        reviews.forEach { review ->
+            ReviewItem(review)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
 
 @Composable
 fun SomethingWentWrong() {
@@ -511,5 +696,6 @@ fun SomethingWentWrong() {
         )
     }
 }
+
 
 

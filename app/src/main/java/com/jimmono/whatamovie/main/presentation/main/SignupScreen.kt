@@ -107,7 +107,7 @@ fun SignupScreen(
                 )
 
                 Text(
-                    "Sign up now for free and start meditating, and explore Medic.",
+                    "Sign up now for free and start rating movies.",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = font,

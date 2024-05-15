@@ -71,15 +71,15 @@ fun WelcomeScreen(
             )
 
             Text(
-                "WELCOME",
-                fontSize = 32.sp,
+                "Welcome to What a Movie!",
+                fontSize = 28.sp,
                 fontFamily = font,
                 fontWeight = FontWeight(700),
                 color = Color.White
             )
-
+            Spacer(modifier = Modifier.weight(0.1f))
             Text(
-                "Do meditation. Stay focused.\nLive a healthy life.",
+                "Your go-to destination for insightful film reviews and recommendations!.",
                 textAlign = TextAlign.Center,
                 fontFamily = font,
                 fontSize = 18.sp,
