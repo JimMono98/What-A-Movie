@@ -102,7 +102,6 @@ fun MediaDetailScreen(
     }
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
-    var isReviewSectionVisible by remember { mutableStateOf(true) }
 
     val imageUrl = "${MediaApi.IMAGE_BASE_URL}${media.backdropPath}"
 
@@ -114,8 +113,24 @@ fun MediaDetailScreen(
     )
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    var isReviewSectionVisible by remember { mutableStateOf(true) }
+    var reviews by remember { mutableStateOf<List<Review>?>(null) }
+
+    fun fetchReviews(movieTitle: String) {
+        FirebaseFirestore.getInstance().collection("reviews")
+            .whereEqualTo("movieTitle", movieTitle)
+            .get()
+            .addOnSuccessListener { result ->
+                val fetchedReviews = result.toObjects(Review::class.java)
+                reviews = fetchedReviews
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, "Failed to fetch reviews: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     fun submitReview(movieTitle: String, rating: Float, comment: String) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
             val review = Review(
                 userId = currentUser.uid,
@@ -130,10 +145,10 @@ fun MediaDetailScreen(
                     .addOnSuccessListener {
                         Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
                         isReviewSectionVisible = false
-
+                        fetchReviews(movieTitle) // Fetch reviews again after submission
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(context, "Failed to submit review", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(context, "Failed to submit review: ${exception.message}", Toast.LENGTH_SHORT).show()
                     }
             }
         } else {
@@ -141,10 +156,18 @@ fun MediaDetailScreen(
         }
     }
 
+
+
+
     val surface = MaterialTheme.colorScheme.surface
     var averageColor by remember {
         mutableStateOf(surface)
     }
+
+    LaunchedEffect(key1 = media.title) {
+        fetchReviews(media.title)
+    }
+
 
     Box(
         modifier = Modifier
@@ -216,7 +239,11 @@ fun MediaDetailScreen(
                 }
             }
 
-            ReviewList(movieTitle = media.title)
+            reviews?.let {
+                if (it.isNotEmpty()) {
+                    ReviewList(reviews = it)
+                }
+            }
         }
 
         PullRefreshIndicator(
@@ -600,85 +627,68 @@ fun Rating(
 @Composable
 fun ReviewSection(
     media: Media,
-    onSubmitReview: (Float, String) -> Unit
+    onSubmit: (rating: Float, comment: String) -> Unit
 ) {
     var rating by remember { mutableStateOf(0f) }
     var comment by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Rate and Review", color = MaterialTheme.colorScheme.onSurface)
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        Text("Submit your review for ${media.title}", color = MaterialTheme.colorScheme.onSurface)
+
         Spacer(modifier = Modifier.height(8.dp))
+
         RatingChange(
             rating = rating,
-            onRatingChange = { rating = it }
+            onRatingChange = { newRating ->
+                rating = newRating
+            }
         )
+
         Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = comment,
             onValueChange = { comment = it },
             label = { Text("Comment") },
             modifier = Modifier.fillMaxWidth()
         )
+
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {
 
-            onSubmitReview(rating, comment)
-
-        }) {
-            Text("Submit Review")
+        Button(
+            onClick = { onSubmit(rating, comment) },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Submit")
         }
     }
 }
 @Composable
-fun ReviewItem(review: Review) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = review.userName, color = MaterialTheme.colorScheme.onSurface)
-            Spacer(modifier = Modifier.height(4.dp))
-            RatingChange(
-                rating = review.rating,
-                onRatingChange = {}, // This can be ignored for display purposes
-                modifier = Modifier,
-                starSize = 16.dp,
-                spaceBetween = 2.dp
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = review.comment)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date()),
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
-@Composable
-fun ReviewList(movieTitle: String) {
-    val reviews = remember { mutableStateListOf<Review>() }
-    val db = FirebaseFirestore.getInstance()
-
-    LaunchedEffect(movieTitle) {
-        db.collection("reviews")
-            .whereEqualTo("movieTitle", movieTitle)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { value, error ->
-                if (error == null && value != null) {
-                    reviews.clear()
-                    reviews.addAll(value.toObjects(Review::class.java))
-                }
-            }
-    }
-
+fun ReviewList(reviews: List<Review>) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Reviews", color = MaterialTheme.colorScheme.onSurface)
+        Text("Reviews", color = MaterialTheme.colorScheme.onSurface)
+
         Spacer(modifier = Modifier.height(8.dp))
+
         reviews.forEach { review ->
-            ReviewItem(review)
+            ReviewItem(review = review)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
+@Composable
+fun ReviewItem(review: Review) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(text = "User: ${review.userName}", fontWeight = FontWeight.Bold)
+        Text(text = "Rating: ${review.rating}")
+        Text(text = review.comment)
+    }
+}
 @Composable
 fun SomethingWentWrong() {
     Box(
