@@ -62,7 +62,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.ic_series),
                 contentDescription = null,
                 modifier = Modifier
                     .width(320.dp)
