@@ -1,7 +1,10 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,6 +29,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -50,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -61,6 +66,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.google.android.gms.common.util.Hex
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -79,10 +85,8 @@ import com.jimmono.whatamovie.util.ui_shared_components.RatingChange
 import com.jimmono.whatamovie.util.ui_shared_components.genresProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.CompletableFuture
+import com.jimmono.whatamovie.ui.theme.yellow
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -248,7 +252,22 @@ fun MediaDetailScreen(
                     submitReview(media.title, rating, comment)
                 }
             } else if (hasUserCommented) {
-                Text("You have already reviewed this Movie/Series.", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surface),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "You have already reviewed this Movie/Series.",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = font,
+                            fontSize = 14.sp,
+                        )
+                    }
+                }
             }
 
             reviews?.let {
@@ -644,38 +663,64 @@ fun ReviewSection(
     var rating by remember { mutableStateOf(0f) }
     var comment by remember { mutableStateOf("") }
 
-    Column(
+    Surface(
+        shape = MaterialTheme.shapes.large, // Use a predefined shape
+        border = BorderStroke(1.dp, Color.Gray),
+        color = MaterialTheme.colorScheme.surface,// Add a border
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+            .padding(8.dp) // Add padding around the border
     ) {
-        Text("Submit your review for ${media.title}", color = MaterialTheme.colorScheme.onSurface)
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        RatingChange(
-            rating = rating,
-            onRatingChange = { newRating ->
-                rating = newRating
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = comment,
-            onValueChange = { comment = it },
-            label = { Text("Comment") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = { onSubmit(rating, comment) },
-            modifier = Modifier.align(Alignment.End)
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
-            Text("Submit")
+            Text(
+                "Submit your review for ${media.title}",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = font,
+                fontSize = 16.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            RatingChange(
+                rating = rating,
+                onRatingChange = { newRating ->
+                    rating = newRating
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = comment,
+                onValueChange = { comment = it },
+                label = {
+                    Text(
+                        "Comment",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontFamily = font,
+                        fontSize = 14.sp,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { onSubmit(rating, comment) },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(
+                    "Submit",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontFamily = font,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
         }
     }
 }
@@ -684,7 +729,20 @@ fun ReviewList(reviews: List<Review>) {
     val sortedReviews = reviews.sortedByDescending { it.timestamp }  // Sort by timestamp descending
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Reviews on What a Film!", color = MaterialTheme.colorScheme.onSurface)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Reviews on What a Film!",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = font,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -693,14 +751,71 @@ fun ReviewList(reviews: List<Review>) {
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
-}
+    }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReviewItem(review: Review) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Email: ${review.userEmail}", fontWeight = FontWeight.Bold)
-        Text(text = "Rating: ${review.rating}")
-        Text(text = review.comment)
+    val rating = "${review.rating}"
+    Surface(
+        shape = MaterialTheme.shapes.large, // Use a predefined shape
+        border = BorderStroke(1.dp, Color.Gray), // Add a border
+        modifier = Modifier
+            .height(150.dp)
+            .padding(8.dp) // Add padding around the border
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp) // Internal padding for content
+        ) {
+            Text(
+                text = "Email: ${review.userEmail}",
+                fontFamily = font,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp)) // Space between items
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Rating: ${review.rating}/5.0",
+                    color = yellow, // Ensure yellow is defined or use a theme color
+                    fontFamily = font,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                RatingBar(
+                    modifier = Modifier,
+                    starsModifier = Modifier.size(12.dp),
+                    rating = rating.toDouble()
+                )
+
+                Text(
+                    text = review.timestamp.toDate().toString().substring(8, 11) + review.timestamp.toDate().toString().substring(3, 8) + review.timestamp.toInstant().toString().substring(0, 4) + review.timestamp.toDate().toString().substring(10, 20),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontFamily = font,
+                    fontSize = 12.sp,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp)) // Space between items
+
+            Text(
+                text = review.comment,
+                fontFamily = font,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                lineHeight = 20.sp, // Increased line height for better readability
+            )
+        }
     }
 }
 @Composable

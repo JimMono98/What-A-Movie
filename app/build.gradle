@@ -153,5 +153,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
 
-
 }

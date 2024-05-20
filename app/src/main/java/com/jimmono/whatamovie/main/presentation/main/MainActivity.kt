@@ -64,11 +64,9 @@ fun Navigation(
 ) {
     val navController = rememberNavController()
 
-
     val mediaDetailsViewModel = hiltViewModel<MediaDetailsViewModel>()
     val mediaDetailsScreenState =
         mediaDetailsViewModel.mediaDetailsScreenState.collectAsState().value
-
 
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
