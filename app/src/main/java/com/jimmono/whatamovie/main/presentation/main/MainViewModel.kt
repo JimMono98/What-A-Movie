@@ -1,6 +1,8 @@
 package com.jimmono.whatamovie.main.presentation.main
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jimmono.whatamovie.main.data.remote.api.MediaApi.Companion.API_KEY
@@ -28,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val mediaRepository: MediaRepository,
-    private val genreRepository: GenreRepository
+    private val genreRepository: GenreRepository,
 ) : ViewModel() {
 
 
@@ -43,6 +45,9 @@ class MainViewModel @Inject constructor(
             delay(500)
             showSplashScreen.value = false
         }
+
+
+
     }
 
     private fun load(fetchFromRemote: Boolean = false) {

@@ -1,7 +1,10 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.jimmono.whatamovie.main.data.remote.api.MediaApi.Companion.API_KEY
 import com.jimmono.whatamovie.main.domain.repository.MediaRepository
 import com.jimmono.whatamovie.media_details.domain.repository.DetailsRepository
@@ -229,9 +232,3 @@ class MediaDetailsViewModel @Inject constructor(
     }
 
 }
-
-
-
-
-
-

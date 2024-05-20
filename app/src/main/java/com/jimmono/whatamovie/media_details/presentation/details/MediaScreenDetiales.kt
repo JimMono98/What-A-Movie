@@ -1,5 +1,6 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -81,6 +82,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.CompletableFuture
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -90,7 +92,6 @@ fun MediaDetailScreen(
     mediaDetailsScreenState: MediaDetailsScreenState,
     onEvent: (MediaDetailsScreenEvents) -> Unit
 ) {
-
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
 
@@ -117,6 +118,23 @@ fun MediaDetailScreen(
     var isReviewSectionVisible by remember { mutableStateOf(true) }
     var reviews by remember { mutableStateOf<List<Review>?>(null) }
 
+    // State to track if the user has already commented
+    var hasUserCommented by remember { mutableStateOf(false) }
+
+    // Function to check if the user has commented on this media
+    fun checkIfUserCommented(mediaTitle: String, userId: String) {
+        FirebaseFirestore.getInstance().collection("reviews")
+            .whereEqualTo("movieTitle", mediaTitle)
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                hasUserCommented = !result.isEmpty
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, "Failed to check comments: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     fun fetchReviews(movieTitle: String) {
         FirebaseFirestore.getInstance().collection("reviews")
             .whereEqualTo("movieTitle", movieTitle)
@@ -134,7 +152,7 @@ fun MediaDetailScreen(
         if (currentUser != null) {
             val review = Review(
                 userId = currentUser.uid,
-                userName = currentUser.displayName ?: "Anonymous",
+                userEmail = currentUser.email ?: "Anonymous",
                 movieTitle = movieTitle,
                 rating = rating,
                 comment = comment
@@ -156,18 +174,15 @@ fun MediaDetailScreen(
         }
     }
 
-
-
-
     val surface = MaterialTheme.colorScheme.surface
-    var averageColor by remember {
-        mutableStateOf(surface)
-    }
+    var averageColor by remember { mutableStateOf(surface) }
 
     LaunchedEffect(key1 = media.title) {
         fetchReviews(media.title)
+        currentUser?.let { user ->
+            checkIfUserCommented(media.title, user.uid)
+        }
     }
-
 
     Box(
         modifier = Modifier
@@ -175,19 +190,16 @@ fun MediaDetailScreen(
             .background(MaterialTheme.colorScheme.surface)
             .pullRefresh(refreshState)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-
                 VideoSection(
                     navController = navController,
                     mediaDetailsScreenState = mediaDetailsScreenState,
@@ -203,7 +215,6 @@ fun MediaDetailScreen(
                         .fillMaxWidth()
                         .wrapContentHeight()
                 ) {
-
                     PosterSection(media = media) {}
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -214,9 +225,7 @@ fun MediaDetailScreen(
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
-
                 }
-
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -233,10 +242,13 @@ fun MediaDetailScreen(
 
             Rating(media = media)
 
-            if (isReviewSectionVisible) {
+            // Conditionally render the review section
+            if (isReviewSectionVisible && !hasUserCommented) {
                 ReviewSection(media = media) { rating, comment ->
                     submitReview(media.title, rating, comment)
                 }
+            } else if (hasUserCommented) {
+                Text("You have already reviewed this Movie/Series.", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
             }
 
             reviews?.let {
@@ -669,12 +681,14 @@ fun ReviewSection(
 }
 @Composable
 fun ReviewList(reviews: List<Review>) {
+    val sortedReviews = reviews.sortedByDescending { it.timestamp }  // Sort by timestamp descending
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Reviews", color = MaterialTheme.colorScheme.onSurface)
+        Text("Reviews on What a Film!", color = MaterialTheme.colorScheme.onSurface)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        reviews.forEach { review ->
+        sortedReviews.forEach { review ->
             ReviewItem(review = review)
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -684,7 +698,7 @@ fun ReviewList(reviews: List<Review>) {
 @Composable
 fun ReviewItem(review: Review) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "User: ${review.userName}", fontWeight = FontWeight.Bold)
+        Text(text = "Email: ${review.userEmail}", fontWeight = FontWeight.Bold)
         Text(text = "Rating: ${review.rating}")
         Text(text = review.comment)
     }
