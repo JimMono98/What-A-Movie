@@ -22,6 +22,7 @@ fun CButton(
     text: String,
     onClick: () -> Unit = {},
 
+
 ) {
     // make this button also resuable
     Button(
@@ -29,7 +30,7 @@ fun CButton(
         onClick = onClick,
         shape = MaterialTheme.shapes.large,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF7C9A92)
+            containerColor = MaterialTheme.colorScheme.onSurface
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +43,7 @@ fun CButton(
                 fontSize = 22.sp,
                 fontFamily = font,
                 fontWeight = FontWeight(500),
-                color = Color.White
+                color = MaterialTheme.colorScheme.surface
             )
         )
 

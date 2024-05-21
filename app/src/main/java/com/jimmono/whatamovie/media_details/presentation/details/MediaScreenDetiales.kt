@@ -1,6 +1,7 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
 import android.os.Build
+import android.widget.Space
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -1009,24 +1010,29 @@ fun EditReviewDialog(
 ) {
     var editedComment by remember { mutableStateOf(review.comment) }
     var rating by remember { mutableFloatStateOf(review.rating) }
+    var timestamp by remember { mutableStateOf(review.timestamp) }
 
     AlertDialog(
         onDismissRequest = { dismissDialog() },
-        title = { Text("Edit Review") },
+        title = {
+            Text("Edit Review\n")
+        },
         text = {
+
             Column {
-                TextField(
-                    value = editedComment,
-                    onValueChange = { editedComment = it },
-                    label = { Text("Enter your edited review") }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
                 RatingChange(
                     rating = rating,
                     onRatingChange = { newRating ->
                         rating = newRating
                     }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = editedComment,
+                    onValueChange = { editedComment = it },
+                    label = { Text("Enter your edited review") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
         },
         confirmButton = {

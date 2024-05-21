@@ -2,6 +2,7 @@ package com.jimmono.whatamovie.main.presentation.main
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,16 +42,11 @@ fun WelcomeScreen(
 ) {
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(color= MaterialTheme.colorScheme.background)// Set your desired background color here
     ) {
         // Background Image
-        Image(
-            painter = painterResource(id = R.drawable.bg),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
-
         /// Content
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,19 +69,19 @@ fun WelcomeScreen(
 
             Text(
                 "Welcome to What a Movie!",
-                fontSize = 28.sp,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = font,
-                fontWeight = FontWeight(700),
-                color = Color.White
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
                 "Your go-to destination for insightful film reviews and recommendations!.",
                 textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = font,
-                fontSize = 18.sp,
-                fontWeight = FontWeight(500),
-                color = Color.White
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -93,7 +90,7 @@ fun WelcomeScreen(
             CButton(text = "Sign In With Email",
                 onClick = {
                         navController.navigate(Route.LOGIN_SCREEN)
-                }
+                },
             )
 
             DontHaveAccountRow(

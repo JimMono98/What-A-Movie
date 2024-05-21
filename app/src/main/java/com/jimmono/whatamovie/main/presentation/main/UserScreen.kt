@@ -94,7 +94,7 @@ fun UserScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(80.dp))
 
                     // User name
                     Row(
@@ -111,7 +111,7 @@ fun UserScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(25.dp))
 
                     // User email
                     Row(
@@ -128,7 +128,7 @@ fun UserScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.weight(1f))
 
                     // Edit profile button
                     Button(

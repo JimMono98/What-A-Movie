@@ -2,6 +2,7 @@ package com.jimmono.whatamovie.main.presentation.main
 
 import android.content.ContentValues
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,19 +65,10 @@ fun SignupScreen(
     }
 
     Surface(
-        color = Color(0xFF253334),
+        color= MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Background Image
-            Image(
-                painter = painterResource(id = R.drawable.bg1),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(190.dp)
-                    .align(Alignment.BottomCenter)
-            )
 
             // Content
             Column(
@@ -85,26 +78,27 @@ fun SignupScreen(
                     .padding(horizontal = 24.dp)
             ) {
                 // Logo
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(220.dp))
 
 
                 Text(
-                    text = "Sign Up",
+                    text = "Register",
                     style = TextStyle(
-                        fontSize = 28.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = font,
-                        fontWeight = FontWeight(500),
-                        color = Color.White
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
                     ),
                     modifier = Modifier.align(Alignment.Start)
                 )
 
                 Text(
-                    "Sign up now for free and start rating movies.",
+                    "Register now for free and start rating movies.",
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = font,
-                        color = Color(0xB2FFFFFF)
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
                     ),
                     modifier = Modifier
                         .align(Alignment.Start)
@@ -140,31 +134,36 @@ fun SignupScreen(
                         }
                     }
                 )
-
                 Row(
-                    modifier = Modifier.padding(top = 12.dp, bottom = 52.dp)
-                ) {
-                    Text(
-                        "Already have an account? ",
+                    modifier = Modifier.padding(top=12.dp, bottom = 52.dp)
+                ){
+                    Text("Already have an account? ",
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontFamily = font,
-                            color = Color.White
-                        )
-                    )
-
-                    Text(
-                        "Sign In",
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontFamily = font,
-                            fontWeight = FontWeight(800),
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface
                         ),
-                        modifier = Modifier.clickable {
-                            navController.navigate(Route.LOGIN_SCREEN)
-                        }
+                        modifier = Modifier.padding(5.dp)
                     )
+                    androidx.compose.material.Surface(
+                        shape = MaterialTheme.shapes.large,
+                        border = BorderStroke(1.dp, Color.Gray),
+                        modifier = Modifier
+                    ) {
+                        Text("Sign In",
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                fontFamily = font,
+                                fontWeight = FontWeight(800),
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            modifier = Modifier.clickable {
+                                navController.navigate(Route.LOGIN_SCREEN)
+                            }
+                                .padding(5.dp)
+                        )
+                    }
+
                 }
             }
         }

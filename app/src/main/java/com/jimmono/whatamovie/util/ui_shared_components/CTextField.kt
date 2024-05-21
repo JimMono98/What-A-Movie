@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -34,9 +36,8 @@ fun CTextField(
             Text(text = hint,
                 style = TextStyle(
                     fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = font,
-
-                    color = Color.White
                 )
             )
         },
@@ -47,7 +48,7 @@ fun CTextField(
             containerColor =  Color.Transparent,
             focusedIndicatorColor = Color(0xFFBEC2C2),
             unfocusedIndicatorColor = Color(0xFFBEC2C2),
-            textColor = Color.White,
+            textColor = MaterialTheme.colorScheme.onSurface,
         ),
     )
 

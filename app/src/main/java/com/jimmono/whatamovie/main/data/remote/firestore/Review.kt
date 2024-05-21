@@ -15,11 +15,13 @@ data class Review(
 fun editReview(review: Review, editedComment: String, rating: Float, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
     val db = FirebaseFirestore.getInstance()
     val reviewRef = db.collection("reviews").document(review.id)
+    val timestamp: Timestamp = Timestamp.now()
 
     reviewRef.update(
         mapOf(
             "comment" to editedComment,
-            "rating" to rating
+            "rating" to rating,
+            "timestamp" to timestamp
         )
     )
         .addOnSuccessListener {

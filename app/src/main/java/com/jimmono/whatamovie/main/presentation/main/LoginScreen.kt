@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,19 +64,11 @@ fun LoginScreen(
     }
 
     Surface(
-        color = Color(0xFF253334),
+        color= MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Background Image
-            Image(
-                painter = painterResource(id = R.drawable.bg1),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(190.dp)
-                    .align(Alignment.BottomCenter)
-            )
+
 
             // Content
             Column(
@@ -85,25 +78,26 @@ fun LoginScreen(
                     .padding(horizontal = 24.dp)
             ) {
                 // Logo
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(220.dp))
 
                 Text(
                     text = "Sign In",
                     style = TextStyle(
-                        fontSize = 28.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = font,
-                        fontWeight = FontWeight(500),
-                        color = Color.White
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
                     ),
                     modifier = Modifier.align(Alignment.Start)
                 )
 
                 Text(
-                    "Sign In now to access to our platform.",
+                    "Sign In now to access to our platform now!",
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = font,
-                        color = Color(0xB2FFFFFF)
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
                     ),
                     modifier = Modifier
                         .align(Alignment.Start)
