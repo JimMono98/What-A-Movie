@@ -1,7 +1,6 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -11,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,11 +25,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -44,7 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,7 +56,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -66,13 +67,12 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import com.google.android.gms.common.util.Hex
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.jimmono.whatamovie.R
 import com.jimmono.whatamovie.main.data.remote.api.MediaApi
 import com.jimmono.whatamovie.main.data.remote.firestore.Review
+import com.jimmono.whatamovie.main.data.remote.firestore.editReview
 import com.jimmono.whatamovie.main.domain.models.Media
 import com.jimmono.whatamovie.media_details.presentation.details.detailScreenUiComponents.MovieImage
 import com.jimmono.whatamovie.theme.SmallRadius
@@ -86,8 +86,10 @@ import com.jimmono.whatamovie.util.ui_shared_components.genresProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.jimmono.whatamovie.ui.theme.yellow
+import timber.log.Timber
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MediaDetailScreen(
@@ -125,6 +127,19 @@ fun MediaDetailScreen(
     // State to track if the user has already commented
     var hasUserCommented by remember { mutableStateOf(false) }
 
+    val db = FirebaseFirestore.getInstance()
+
+
+    fun deleteReview(review: Review, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val reviewRef = db.collection("reviews").document(review.id)
+        reviewRef.delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { e ->
+                Timber.tag("Firestore").e(e, "Error deleting review")
+                onFailure(e)
+            }
+    }
+
     // Function to check if the user has commented on this media
     fun checkIfUserCommented(mediaTitle: String, userId: String) {
         FirebaseFirestore.getInstance().collection("reviews")
@@ -155,6 +170,7 @@ fun MediaDetailScreen(
     fun submitReview(movieTitle: String, rating: Float, comment: String) {
         if (currentUser != null) {
             val review = Review(
+                id = "", // Temporary placeholder, will be updated with Firestore ID
                 userId = currentUser.uid,
                 userEmail = currentUser.email ?: "Anonymous",
                 movieTitle = movieTitle,
@@ -164,10 +180,20 @@ fun MediaDetailScreen(
             coroutineScope.launch {
                 FirebaseFirestore.getInstance().collection("reviews")
                     .add(review)
-                    .addOnSuccessListener {
-                        Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
-                        isReviewSectionVisible = false
-                        fetchReviews(movieTitle) // Fetch reviews again after submission
+                    .addOnSuccessListener { documentReference ->
+                        val reviewId = documentReference.id
+                        review.id = reviewId // Update review object with Firestore ID
+
+                        // Now, update the review in Firestore with the correct ID
+                        documentReference.set(review)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
+                                isReviewSectionVisible = false
+                                fetchReviews(movieTitle) // Fetch reviews again after submission
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(context, "Failed to update review with ID: ${exception.message}", Toast.LENGTH_SHORT).show()
+                            }
                     }
                     .addOnFailureListener { exception ->
                         Toast.makeText(context, "Failed to submit review: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -272,8 +298,26 @@ fun MediaDetailScreen(
 
             reviews?.let {
                 if (it.isNotEmpty()) {
-                    ReviewList(reviews = it)
+                    ReviewList(
+                        reviews = reviews!!,
+                        currentUserEmail = currentUser?.email ?: "",
+                        onEdit = { review ->
+
+                        },
+                        onDelete = { review ->
+                            deleteReview(
+                                review,
+                                onSuccess = {
+                                    Toast.makeText(context, "Review deleted successfully", Toast.LENGTH_SHORT).show()
+                                            },
+                                onFailure = {
+                                    e -> Toast.makeText(context, "Error deleting review: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        }
+                    )
                 }
+
             }
         }
 
@@ -662,11 +706,12 @@ fun ReviewSection(
 ) {
     var rating by remember { mutableStateOf(0f) }
     var comment by remember { mutableStateOf("") }
+    val maxLength = 40
 
     Surface(
         shape = MaterialTheme.shapes.large, // Use a predefined shape
         border = BorderStroke(1.dp, Color.Gray),
-        color = MaterialTheme.colorScheme.surface,// Add a border
+        color = MaterialTheme.colorScheme.surface, // Add a border
         modifier = Modifier
             .padding(8.dp) // Add padding around the border
     ) {
@@ -695,7 +740,11 @@ fun ReviewSection(
 
             OutlinedTextField(
                 value = comment,
-                onValueChange = { comment = it },
+                onValueChange = { newComment ->
+                    if (newComment.length <= maxLength) {
+                        comment = newComment
+                    }
+                },
                 label = {
                     Text(
                         "Comment",
@@ -704,7 +753,19 @@ fun ReviewSection(
                         fontSize = 14.sp,
                     )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
+                maxLines = 5
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                "${comment.length} / $maxLength",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = font,
+                fontSize = 12.sp,
+                modifier = Modifier.align(Alignment.End)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -724,14 +785,26 @@ fun ReviewSection(
         }
     }
 }
+
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReviewList(reviews: List<Review>) {
+fun ReviewList(
+    reviews: List<Review>,
+    currentUserEmail: String,
+    onEdit: (Review) -> Unit,
+    onDelete: (Review) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    var editedReview by remember { mutableStateOf<Review?>(null) }
+    val context = LocalContext.current
+
     val sortedReviews = reviews.sortedByDescending { it.timestamp }  // Sort by timestamp descending
 
     Column(modifier = Modifier.padding(16.dp)) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
@@ -747,28 +820,95 @@ fun ReviewList(reviews: List<Review>) {
         Spacer(modifier = Modifier.height(8.dp))
 
         sortedReviews.forEach { review ->
-            ReviewItem(review = review)
+            ReviewItem(
+                review = review,
+                currentUserEmail = currentUserEmail,
+                onEdit = { reviewToEdit ->
+                    // Open edit dialog
+                    showDialog = true
+                    editedReview = reviewToEdit
+                },
+                onDelete = onDelete
+            )
             Spacer(modifier = Modifier.height(8.dp))
         }
+
+        editedReview?.let { review ->
+            if (showDialog) {
+                EditReviewDialog(
+                    review = review,
+                    onEditReview = { editedComment: String, rating: Float ->
+                        // Call edit review function
+                        editReview(review, editedComment, rating,
+                            onSuccess = {
+                                // Handle success
+                                Toast.makeText(context, "Review edited successfully", Toast.LENGTH_SHORT).show()
+                                fetchReviews(review.movieTitle,
+                                    onComplete = { updatedReviews ->
+                                        // Update the reviews state here
+                                    },
+                                    onError = { e ->
+                                        // Handle error
+                                        Toast.makeText(context, "Error fetching reviews: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                            },
+                            onFailure = { e ->
+                                // Handle failure
+                                Toast.makeText(context, "Error editing review: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                        showDialog = false
+                    },
+                    dismissDialog = { showDialog = false }
+                )
+            }
+        }
     }
-    }
+}
+
+fun fetchReviews(movieTitle: String, onComplete: (List<Review>) -> Unit, onError: (Exception) -> Unit) {
+    val db = FirebaseFirestore.getInstance()
+    db.collection("reviews")
+        .whereEqualTo("movieTitle", movieTitle)
+        .get()
+        .addOnSuccessListener { result ->
+            val reviews = result.map { document ->
+                Review(
+                    id = document.id,
+                    movieTitle = document.getString("movieTitle") ?: "",
+                    comment = document.getString("comment") ?: "",
+                    userEmail = document.getString("userEmail") ?: ""
+                )
+            }
+            onComplete(reviews)
+        }
+        .addOnFailureListener { e ->
+            onError(e)
+        }
+}
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReviewItem(review: Review) {
+fun ReviewItem(
+    review: Review,
+    currentUserEmail: String,
+    onEdit: (Review) -> Unit,
+    onDelete: (Review) -> Unit
+) {
     val rating = "${review.rating}"
     Surface(
-        shape = MaterialTheme.shapes.large, // Use a predefined shape
-        border = BorderStroke(1.dp, Color.Gray), // Add a border
+        shape = MaterialTheme.shapes.large,
+        border = BorderStroke(1.dp, Color.Gray),
         modifier = Modifier
             .height(150.dp)
-            .padding(8.dp) // Add padding around the border
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp) // Internal padding for content
+                .padding(16.dp)
         ) {
             Text(
                 text = "Email: ${review.userEmail}",
@@ -778,7 +918,7 @@ fun ReviewItem(review: Review) {
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(8.dp)) // Space between items
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -787,7 +927,7 @@ fun ReviewItem(review: Review) {
             ) {
                 Text(
                     text = "Rating: ${review.rating}/5.0",
-                    color = yellow, // Ensure yellow is defined or use a theme color
+                    color = yellow,
                     fontFamily = font,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
@@ -799,25 +939,116 @@ fun ReviewItem(review: Review) {
                 )
 
                 Text(
-                    text = review.timestamp.toDate().toString().substring(8, 11) + review.timestamp.toDate().toString().substring(3, 8) + review.timestamp.toInstant().toString().substring(0, 4) + review.timestamp.toDate().toString().substring(10, 20),
+                    text = review.timestamp.toDate().toString().substring(8, 11) +
+                            review.timestamp.toDate().toString().substring(3, 8) +
+                            review.timestamp.toInstant().toString().substring(0, 4) +
+                            review.timestamp.toDate().toString().substring(10, 20),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = font,
                     fontSize = 12.sp,
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp)) // Space between items
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = review.comment,
                 fontFamily = font,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurface,
-                lineHeight = 20.sp, // Increased line height for better readability
+                lineHeight = 20.sp,
             )
-        }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (review.userEmail == currentUserEmail) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+
+                ) {
+                    Button(
+                        onClick = { onEdit(review) },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(50.dp),
+                        contentPadding = PaddingValues(0.dp) // Remove default padding
+                    ) {
+                        Text(
+                            "Edit",
+                            fontFamily = font,
+                            fontSize = 10.sp, // Smaller text size
+                            color = MaterialTheme.colorScheme.surface
+                        )
+                    }
+                    Text(" ")
+                    Button(
+                        onClick = { onDelete(review) },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                        modifier = Modifier.size(50.dp),
+                        contentPadding = PaddingValues(0.dp) // Remove default padding
+                    ) {
+                        Text(
+                            "Delete",
+                            fontFamily = font,
+                            fontSize = 10.sp, // Smaller text size
+                            color = MaterialTheme.colorScheme.surface
+                        )
+                    }
+                }
+
+            }}
     }
 }
+@Composable
+fun EditReviewDialog(
+    review: Review,
+    onEditReview: (String, Float) -> Unit, // Modify to include rating
+    dismissDialog: () -> Unit
+) {
+    var editedComment by remember { mutableStateOf(review.comment) }
+    var rating by remember { mutableFloatStateOf(review.rating) }
+
+    AlertDialog(
+        onDismissRequest = { dismissDialog() },
+        title = { Text("Edit Review") },
+        text = {
+            Column {
+                TextField(
+                    value = editedComment,
+                    onValueChange = { editedComment = it },
+                    label = { Text("Enter your edited review") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                RatingChange(
+                    rating = rating,
+                    onRatingChange = { newRating ->
+                        rating = newRating
+                    }
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onEditReview(editedComment, rating) // Pass rating along with comment
+                    dismissDialog()
+                }
+            ) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { dismissDialog() }
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
 @Composable
 fun SomethingWentWrong() {
     Box(

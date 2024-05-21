@@ -46,7 +46,6 @@ fun UserScreen(
     bottomBarNavController: NavHostController,
     mainUiState: MainUiState,
     onEvent: (MainUiEvents) -> Unit,
-
 ) {
     val auth = FirebaseAuth.getInstance()
     val user = auth.currentUser
@@ -57,111 +56,233 @@ fun UserScreen(
     toastMessage?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         toastMessage = null
-
     }
 
     Scaffold() {
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // User profile image (if available)
-            user?.photoUrl?.let {
-                Image(
-                    painter = rememberImagePainter(data = it),
-                    contentDescription = "Profile picture",
+            if (maxWidth < maxHeight) {
+                // Portrait layout
+                Column(
                     modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray),
-                    contentScale = ContentScale.Crop
-                )
-            } ?: run {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Profile picture placeholder",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-            }
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // User profile image (if available)
+                    user?.photoUrl?.let {
+                        Image(
+                            painter = rememberImagePainter(data = it),
+                            contentDescription = "Profile picture",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                                .background(Color.Gray),
+                            contentScale = ContentScale.Crop
+                        )
+                    } ?: run {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = "Profile picture placeholder",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                                .background(Color.Gray)
+                        )
+                    }
 
-            Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
 
-            // User name
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Username: ",
-                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
-                )
-                Text(
-                    text = user?.displayName ?: "No Name",
-                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
-                )
-            }
+                    // User name
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Username: ",
+                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                        )
+                        Text(
+                            text = user?.displayName ?: "No Name",
+                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                        )
+                    }
 
-            Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-            // User email
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Email: ",
-                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
-                )
-                Text(
-                    text = user?.email ?: "No Email",
-                    style = TextStyle(fontSize = 16.sp, fontFamily = font)
-                )
-            }
+                    // User email
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Email: ",
+                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                        )
+                        Text(
+                            text = user?.email ?: "No Email",
+                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                        )
+                    }
 
-            Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(50.dp))
 
-            // Edit profile button
-            Button(
-                onClick = {
-                    navController.navigate(Route.EDIT_PROFILE)
-                          },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
-                shape = RoundedCornerShape(50),
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(200.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
-            }
+                    // Edit profile button
+                    Button(
+                        onClick = {
+                            navController.navigate(Route.EDIT_PROFILE)
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(200.dp)
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
+                    }
 
-            // Logout button
-            Button(
-                onClick = {
-                    auth.signOut()
-                    navController.navigate(Route.LOGIN_SCREEN) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Logout button
+                    Button(
+                        onClick = {
+                            auth.signOut()
+                            navController.navigate(Route.LOGIN_SCREEN) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                            toastMessage = "Logged out successfully"
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(200.dp)
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+                    }
+                }
+            } else {
+                // Landscape layout
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // User profile image (if available)
+                        user?.photoUrl?.let {
+                            Image(
+                                painter = rememberImagePainter(data = it),
+                                contentDescription = "Profile picture",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray),
+                                contentScale = ContentScale.Crop
+                            )
+                        } ?: run {
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = "Profile picture placeholder",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray)
+                            )
                         }
                     }
-                    toastMessage = "Logged out successfully"
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
-                shape = RoundedCornerShape(50),
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(200.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+
+                    Spacer(modifier = Modifier.width(50.dp))
+
+                    Column(
+                        modifier = Modifier.weight(2f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // User name
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Username: ",
+                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            )
+                            Text(
+                                text = user?.displayName ?: "No Name",
+                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // User email
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Email: ",
+                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            )
+                            Text(
+                                text = user?.email ?: "No Email",
+                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        // Edit profile button
+                        Button(
+                            onClick = {
+                                navController.navigate(Route.EDIT_PROFILE)
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
+                            shape = RoundedCornerShape(50),
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(200.dp)
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // Logout button
+                        Button(
+                            onClick = {
+                                auth.signOut()
+                                navController.navigate(Route.LOGIN_SCREEN) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                }
+                                toastMessage = "Logged out successfully"
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                            shape = RoundedCornerShape(50),
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(200.dp)
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+                        }
+                    }
+                }
             }
         }
     }
