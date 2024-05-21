@@ -3,7 +3,7 @@ package com.jimmono.whatamovie.main.data.local.genres
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//Stroring on Database The differences.
+//Storing on Database The differences.
 //Noting Null cuz its our local database.
 
 @Entity
