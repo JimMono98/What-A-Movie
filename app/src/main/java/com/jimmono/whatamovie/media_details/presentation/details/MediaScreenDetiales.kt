@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -652,9 +653,6 @@ fun Rating(
     media: Media
 ) {
     Column {
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             modifier = Modifier.padding(horizontal = 22.dp),
             text = stringResource(R.string.rating),
@@ -662,7 +660,7 @@ fun Rating(
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface,
-            lineHeight = 16.sp
+            lineHeight = 14.sp
         )
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -678,7 +676,6 @@ fun Rating(
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-
             Text(
                 modifier = Modifier.padding(
                     horizontal = 4.dp
@@ -688,7 +685,6 @@ fun Rating(
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-
             RatingBar(
                 modifier = Modifier,
                 starsModifier = Modifier.size(30.dp),
@@ -696,6 +692,8 @@ fun Rating(
             )
 
         }
+
+        Spacer(modifier = Modifier.height(5.dp))
 
     }
 }
@@ -746,6 +744,7 @@ fun ReviewSection(
                         comment = newComment
                     }
                 },
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface,fontFamily = font),
                 label = {
                     Text(
                         "Comment",
@@ -901,15 +900,20 @@ fun ReviewItem(
     val rating = "${review.rating}"
     Surface(
         shape = MaterialTheme.shapes.large,
-        border = BorderStroke(1.dp, Color.Gray),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+        color = MaterialTheme.colorScheme.surface,
         modifier = Modifier
             .height(150.dp)
             .padding(8.dp)
+            .background(color = MaterialTheme.colorScheme.surface)
+
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .background(color = MaterialTheme.colorScheme.surface)
+
         ) {
             Text(
                 text = "Email: ${review.userEmail}",
@@ -917,6 +921,7 @@ fun ReviewItem(
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
+
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -924,10 +929,11 @@ fun ReviewItem(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+
             ) {
                 Text(
-                    text = "Rating: ${review.rating}/5.0",
+                    text = "Rating: ${review.rating*2}/10.0",
                     color = yellow,
                     fontFamily = font,
                     fontSize = 14.sp,
@@ -980,7 +986,7 @@ fun ReviewItem(
                             "Edit",
                             fontFamily = font,
                             fontSize = 10.sp, // Smaller text size
-                            color = MaterialTheme.colorScheme.surface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Text(" ")
@@ -994,7 +1000,7 @@ fun ReviewItem(
                             "Delete",
                             fontFamily = font,
                             fontSize = 10.sp, // Smaller text size
-                            color = MaterialTheme.colorScheme.surface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -1015,8 +1021,9 @@ fun EditReviewDialog(
     AlertDialog(
         onDismissRequest = { dismissDialog() },
         title = {
-            Text("Edit Review\n")
+            Text("Edit Review\n",color = MaterialTheme.colorScheme.onSurface,fontFamily = font)
         },
+        backgroundColor = MaterialTheme.colorScheme.surface,
         text = {
 
             Column {
@@ -1030,7 +1037,9 @@ fun EditReviewDialog(
                 TextField(
                     value = editedComment,
                     onValueChange = { editedComment = it },
-                    label = { Text("Enter your edited review") }
+                    label = { Text("Enter your edited review",color = MaterialTheme.colorScheme.onSurface,fontFamily = font) },
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface,fontFamily = font)
+
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -1042,14 +1051,14 @@ fun EditReviewDialog(
                     dismissDialog()
                 }
             ) {
-                Text("Save")
+                Text("Save",color = MaterialTheme.colorScheme.onSurface,fontFamily = font)
             }
         },
         dismissButton = {
             Button(
                 onClick = { dismissDialog() }
             ) {
-                Text("Cancel")
+                Text("Cancel",color = MaterialTheme.colorScheme.onSurface,fontFamily = font)
             }
         }
     )

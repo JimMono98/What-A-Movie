@@ -123,7 +123,7 @@ fun SignupScreen(
 
                 // Sign Up Button
                 CButton(
-                    text = "Sign Up",
+                    text = "Register",
                     onClick = {
                         // Perform registration logic
                         registerUser(auth, email, password) { message ->

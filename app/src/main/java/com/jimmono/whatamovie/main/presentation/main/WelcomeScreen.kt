@@ -76,7 +76,7 @@ fun WelcomeScreen(
             )
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
-                "Your go-to destination for insightful film reviews and recommendations!.",
+                "Your go-to destination for insightful film reviews and recommendations!",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = font,

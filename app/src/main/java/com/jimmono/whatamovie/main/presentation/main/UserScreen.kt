@@ -37,6 +37,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberImagePainter
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -57,12 +59,15 @@ fun UserScreen(
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         toastMessage = null
     }
-
-    Scaffold() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+    ) { paddingValues ->
         BoxWithConstraints(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(paddingValues)
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             if (maxWidth < maxHeight) {
                 // Portrait layout
@@ -72,6 +77,7 @@ fun UserScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(modifier = Modifier.height(80.dp))
                     // User profile image (if available)
                     user?.photoUrl?.let {
                         Image(
@@ -80,7 +86,7 @@ fun UserScreen(
                             modifier = Modifier
                                 .size(100.dp)
                                 .clip(CircleShape)
-                                .background(Color.Gray),
+                                .background(MaterialTheme.colorScheme.surface),
                             contentScale = ContentScale.Crop
                         )
                     } ?: run {
@@ -90,7 +96,7 @@ fun UserScreen(
                             modifier = Modifier
                                 .size(100.dp)
                                 .clip(CircleShape)
-                                .background(Color.Gray)
+                                .background(MaterialTheme.colorScheme.onSurface)
                         )
                     }
 
@@ -103,11 +109,16 @@ fun UserScreen(
                     ) {
                         Text(
                             text = "Username: ",
-                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold)
                         )
                         Text(
                             text = user?.displayName ?: "No Name",
-                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 18.sp)
                         )
                     }
 
@@ -120,11 +131,16 @@ fun UserScreen(
                     ) {
                         Text(
                             text = "Email: ",
-                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold)
                         )
                         Text(
                             text = user?.email ?: "No Email",
-                            style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 18.sp)
                         )
                     }
 
@@ -142,7 +158,9 @@ fun UserScreen(
                             .width(200.dp)
                             .padding(vertical = 8.dp)
                     ) {
-                        Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
+                        Text(text = "Edit Profile", style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            fontFamily = font,
+                            fontSize = 16.sp))
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -165,7 +183,12 @@ fun UserScreen(
                             .width(200.dp)
                             .padding(vertical = 8.dp)
                     ) {
-                        Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+                        Text(
+                            text = "Log Out",
+                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 16.sp)
+                        )
                     }
                 }
             } else {
@@ -188,7 +211,7 @@ fun UserScreen(
                                 modifier = Modifier
                                     .size(100.dp)
                                     .clip(CircleShape)
-                                    .background(Color.Gray),
+                                    .background(MaterialTheme.colorScheme.surface),
                                 contentScale = ContentScale.Crop
                             )
                         } ?: run {
@@ -198,7 +221,7 @@ fun UserScreen(
                                 modifier = Modifier
                                     .size(100.dp)
                                     .clip(CircleShape)
-                                    .background(Color.Gray)
+                                    .background(MaterialTheme.colorScheme.onSurface)
                             )
                         }
                     }
@@ -217,11 +240,16 @@ fun UserScreen(
                         ) {
                             Text(
                                 text = "Username: ",
-                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold)
                             )
                             Text(
                                 text = user?.displayName ?: "No Name",
-                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 18.sp)
                             )
                         }
 
@@ -234,15 +262,36 @@ fun UserScreen(
                         ) {
                             Text(
                                 text = "Email: ",
-                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold)
                             )
                             Text(
                                 text = user?.email ?: "No Email",
-                                style = TextStyle(fontSize = 16.sp, fontFamily = font)
+                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 18.sp)
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(50.dp))
+                        /*Spacer(modifier = Modifier.height(50.dp))
+
+                        Button(
+                            onClick = {
+                                navController.navigate(Route.EDIT_PROFILE)
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan),
+                            shape = RoundedCornerShape(50),
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(200.dp)
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(text = "History", style = TextStyle(fontSize = 16.sp))
+                        }
+                        */
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         // Edit profile button
                         Button(
@@ -256,7 +305,9 @@ fun UserScreen(
                                 .width(200.dp)
                                 .padding(vertical = 8.dp)
                         ) {
-                            Text(text = "Edit Profile", style = TextStyle(fontSize = 16.sp))
+                            Text(text = "Edit Profile", style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 16.sp))
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))
@@ -279,7 +330,14 @@ fun UserScreen(
                                 .width(200.dp)
                                 .padding(vertical = 8.dp)
                         ) {
-                            Text(text = "Log Out", style = TextStyle(fontSize = 16.sp, color = Color.White))
+                            Text(
+                                text = "Log Out",
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 16.sp
+                                )
+                            )
                         }
                     }
                 }
