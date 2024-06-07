@@ -90,7 +90,6 @@ import kotlinx.coroutines.launch
 import com.jimmono.whatamovie.ui.theme.yellow
 import timber.log.Timber
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -102,15 +101,6 @@ fun MediaDetailScreen(
 ) {
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
-
-    fun refresh() = refreshScope.launch {
-        refreshing = true
-        delay(1500)
-        onEvent(MediaDetailsScreenEvents.Refresh)
-        refreshing = false
-    }
-
-    val refreshState = rememberPullRefreshState(refreshing, ::refresh)
 
     val imageUrl = "${MediaApi.IMAGE_BASE_URL}${media.backdropPath}"
 
@@ -126,25 +116,14 @@ fun MediaDetailScreen(
     var isReviewSectionVisible by remember { mutableStateOf(true) }
     var reviews by remember { mutableStateOf<List<Review>?>(null) }
 
-    // State to track if the user has already commented
     var hasUserCommented by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var reviewToEdit by remember { mutableStateOf<Review?>(null) }
 
     val db = FirebaseFirestore.getInstance()
 
-
-    fun deleteReview(review: Review, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        val reviewRef = db.collection("reviews").document(review.id)
-        reviewRef.delete()
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { e ->
-                Timber.tag("Firestore").e(e, "Error deleting review")
-                onFailure(e)
-            }
-    }
-
-    // Function to check if the user has commented on this media
     fun checkIfUserCommented(mediaTitle: String, userId: String) {
-        FirebaseFirestore.getInstance().collection("reviews")
+        db.collection("reviews")
             .whereEqualTo("movieTitle", mediaTitle)
             .whereEqualTo("userId", userId)
             .get()
@@ -156,23 +135,53 @@ fun MediaDetailScreen(
             }
     }
 
-    fun fetchReviews(movieTitle: String) {
-        FirebaseFirestore.getInstance().collection("reviews")
+    fun fetchReviews(movieTitle: String, onComplete: (List<Review>) -> Unit = {}, onError: (Exception) -> Unit = {}) {
+        db.collection("reviews")
             .whereEqualTo("movieTitle", movieTitle)
             .get()
             .addOnSuccessListener { result ->
                 val fetchedReviews = result.toObjects(Review::class.java)
                 reviews = fetchedReviews
+                onComplete(fetchedReviews)
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(context, "Failed to fetch reviews: ${exception.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Failed to fetch reviews: ${e.message}", Toast.LENGTH_SHORT).show()
+                onError(e)
+            }
+    }
+
+    fun refresh() = refreshScope.launch {
+        refreshing = true
+        onEvent(MediaDetailsScreenEvents.Refresh)
+        fetchReviews(media.title)
+        currentUser?.let { user ->
+            checkIfUserCommented(media.title, user.uid)
+        }
+        refreshing = false
+    }
+
+    val refreshState = rememberPullRefreshState(refreshing, ::refresh)
+
+    fun deleteReview(review: Review, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val reviewRef = db.collection("reviews").document(review.id)
+        reviewRef.delete()
+            .addOnSuccessListener {
+                onSuccess()
+                fetchReviews(media.title)
+                currentUser?.let { user ->
+                    checkIfUserCommented(media.title, user.uid)
+                }
+            }
+            .addOnFailureListener { e ->
+                Timber.tag("Firestore").e(e, "Error deleting review")
+                onFailure(e)
             }
     }
 
     fun submitReview(movieTitle: String, rating: Float, comment: String) {
         if (currentUser != null) {
             val review = Review(
-                id = "", // Temporary placeholder, will be updated with Firestore ID
+                id = "",
                 userId = currentUser.uid,
                 userEmail = currentUser.email ?: "Anonymous",
                 movieTitle = movieTitle,
@@ -180,18 +189,17 @@ fun MediaDetailScreen(
                 comment = comment
             )
             coroutineScope.launch {
-                FirebaseFirestore.getInstance().collection("reviews")
+                db.collection("reviews")
                     .add(review)
                     .addOnSuccessListener { documentReference ->
                         val reviewId = documentReference.id
-                        review.id = reviewId // Update review object with Firestore ID
-
-                        // Now, update the review in Firestore with the correct ID
+                        review.id = reviewId
                         documentReference.set(review)
                             .addOnSuccessListener {
                                 Toast.makeText(context, "Review submitted", Toast.LENGTH_SHORT).show()
                                 isReviewSectionVisible = false
-                                fetchReviews(movieTitle) // Fetch reviews again after submission
+                                fetchReviews(movieTitle)
+                                checkIfUserCommented(movieTitle, currentUser.uid)
                             }
                             .addOnFailureListener { exception ->
                                 Toast.makeText(context, "Failed to update review with ID: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -274,7 +282,6 @@ fun MediaDetailScreen(
 
             Rating(media = media)
 
-            // Conditionally render the review section
             if (isReviewSectionVisible && !hasUserCommented) {
                 ReviewSection(media = media) { rating, comment ->
                     submitReview(media.title, rating, comment)
@@ -304,22 +311,22 @@ fun MediaDetailScreen(
                         reviews = reviews!!,
                         currentUserEmail = currentUser?.email ?: "",
                         onEdit = { review ->
-
+                            reviewToEdit = review
+                            showEditDialog = true
                         },
                         onDelete = { review ->
                             deleteReview(
                                 review,
                                 onSuccess = {
                                     Toast.makeText(context, "Review deleted successfully", Toast.LENGTH_SHORT).show()
-                                            },
-                                onFailure = {
-                                    e -> Toast.makeText(context, "Error deleting review: ${e.message}", Toast.LENGTH_SHORT).show()
+                                },
+                                onFailure = { e ->
+                                    Toast.makeText(context, "Error deleting review: ${e.message}", Toast.LENGTH_SHORT).show()
                                 }
                             )
                         }
                     )
                 }
-
             }
         }
 
@@ -327,7 +334,37 @@ fun MediaDetailScreen(
             refreshing, refreshState, Modifier.align(Alignment.TopCenter)
         )
     }
+
+    if (showEditDialog && reviewToEdit != null) {
+        EditReviewDialog(
+            review = reviewToEdit!!,
+            onEditReview = { editedComment, rating ->
+                editReview(
+                    review = reviewToEdit!!,
+                    editedComment = editedComment,
+                    rating = rating,
+                    onSuccess = {
+                        fetchReviews(media.title)
+                        currentUser?.let { user ->
+                            checkIfUserCommented(media.title, user.uid)
+                        }
+                        Toast.makeText(context, "Review updated successfully", Toast.LENGTH_SHORT).show()
+                    },
+                    onFailure = { e ->
+                        Toast.makeText(context, "Error updating review: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                )
+                showEditDialog = false
+                reviewToEdit = null
+            },
+            dismissDialog = {
+                showEditDialog = false
+                reviewToEdit = null
+            }
+        )
+    }
 }
+
 
 @Composable
 fun VideoSection(
@@ -845,7 +882,6 @@ fun ReviewList(
                                 Toast.makeText(context, "Review edited successfully", Toast.LENGTH_SHORT).show()
                                 fetchReviews(review.movieTitle,
                                     onComplete = { updatedReviews ->
-                                        // Update the reviews state here
                                     },
                                     onError = { e ->
                                         // Handle error
