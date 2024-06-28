@@ -19,10 +19,8 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 ## Φωτογραφίες 
 
 
-<p float="left">
+<p float="left"> 
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/56cfb5fb-8aa9-47da-afda-565e94e6cc80" width="300" />
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/bc4ed52a-cdfa-459c-83d3-99610aefa39f" width="300" />
 </p>
-
-
-![image](https://github.com/JimMono98/What-A-Movie/assets/149162918/bc4ed52a-cdfa-459c-83d3-99610aefa39f)
 
