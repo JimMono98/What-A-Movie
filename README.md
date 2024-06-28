@@ -37,4 +37,20 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/f5a468db-8629-4ced-9ceb-6d60dbba27c4" width="300" />
 </p>
 
+<p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/bc4ed52a-cdfa-459c-83d3-99610aefa39f" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/09815bb9-b43a-48f7-9c73-d13b1c9fdebd" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/2b3f1f50-da8f-4898-934e-0fa0c3c954ff" width="300" />
+</p>
+
+<p float="left"> 
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/b45761b7-2cf1-4e05-8a99-014b5e0d2f35" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/d5a59c5d-b907-4e28-a0bd-08ce7fdbc554" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/2af422e8-2871-4d9f-8dbb-0213f80956de" width="300" />
+</p>
+
+<p float="left"> 
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/b45761b7-2cf1-4e05-8a99-014b5e0d2f35" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/d5a59c5d-b907-4e28-a0bd-08ce7fdbc554" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/2af422e8-2871-4d9f-8dbb-0213f80956de" width="300" />
+</p>
