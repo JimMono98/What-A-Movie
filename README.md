@@ -8,6 +8,17 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 
 Το **What a Movie** υποστηρίζει και λειτουργία offline για μια βέλτιστη εμπειρία χρήστη και χωρίς ενεργή σύνδεση στο διαδίκτυο. Οι χρήστες μπορούν να αναζητούν πληροφορίες για ταινίες και σειρές και να εξερευνούν τις βαθμολογίες.
 
+## Βιβλιοθήκες
+
+* [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* [Navigation Component](https://developer.android.com/guide/navigation)
+* [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html)
+* [Room](https://developer.android.com/topic/libraries/architecture/room)
+* [Android KTX](https://developer.android.com/kotlin/ktx)
+* [Retrofit](https://square.github.io/retrofit/)
+* [Firebase](https://developer.android.com/studio/write/firebase)
+* [The Movie Database](https://developer.themoviedb.org/docs/getting-started)
+
 ## Ευχαριστίες
 
 Αρχικά θέλω να ευχαριστήσω τον κ.Κοτσάκη και τον κ.Γουλίανα για την δημιουργία του μαθήματος Ελεύθερη Επιλογή καθώς προσφέρει μια πολύ ρεαλιστική και μοναδική εμπειρία στους φοιτητές, δίνοντάς τους την ευκαιρία να συνεργαστούν με εταιρίες στις οποίες επιθυμούν να εργαστούν στο μέλλον.
@@ -18,10 +29,11 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 
 ## Φωτογραφίες 
 
+Παρακάτω παρουσιάζονται μερικές εικόνες από την εφαρμογή What a Movie, οι οποίες αναδεικνύουν τη σχεδίαση και τη λειτουργικότητα της εφαρμογής. Οι εικόνες αυτές δείχνουν επίσης τις εναλλαγές στα θέματα και τον αντίκτυπο τους στην εμφάνιση και την εμπειρία χρήστη.
 
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/56cfb5fb-8aa9-47da-afda-565e94e6cc80" width="300" />
-  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/4257288c-105f-42bc-b941-5f13fff10a59" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/e576b2c4-a298-4583-8a3a-a907ca6f717e" width="300" />
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/f5a468db-8629-4ced-9ceb-6d60dbba27c4" width="300" />
 </p>
 
