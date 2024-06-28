@@ -17,7 +17,7 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 * [Android KTX](https://developer.android.com/kotlin/ktx)
 * [Retrofit](https://square.github.io/retrofit/)
 * [Firebase](https://developer.android.com/studio/write/firebase)
-* [The Movie Database](https://developer.themoviedb.org/docs/getting-started)
+* [The Movie Database (TMDB)](https://developer.themoviedb.org/docs/getting-started)
 
 ## Ευχαριστίες
 
