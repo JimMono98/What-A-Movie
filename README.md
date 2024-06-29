@@ -34,7 +34,7 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 Παρακάτω παρουσιάζονται μερικές εικόνες από την εφαρμογή What a Movie, οι οποίες αναδεικνύουν τη σχεδίαση και τη λειτουργικότητα της εφαρμογής. Οι εικόνες αυτές δείχνουν επίσης τις εναλλαγές στα θέματα και τον αντίκτυπο τους στην εμφάνιση και την εμπειρία χρήστη.
 
 ### Αρχική Οθόνη
-Welcome Page - SignUp Page - Register Page
+Welcome Page - SignIn Page - Register Page
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/56cfb5fb-8aa9-47da-afda-565e94e6cc80" width="300" />
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/e576b2c4-a298-4583-8a3a-a907ca6f717e" width="300" />
