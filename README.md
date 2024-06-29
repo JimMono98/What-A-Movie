@@ -31,7 +31,7 @@ Firebase για την πιστοποίηση χρήστη καθώς και Fir
 
 Παρακάτω παρουσιάζονται μερικές εικόνες από την εφαρμογή What a Movie, οι οποίες αναδεικνύουν τη σχεδίαση και τη λειτουργικότητα της εφαρμογής. Οι εικόνες αυτές δείχνουν επίσης τις εναλλαγές στα θέματα και τον αντίκτυπο τους στην εμφάνιση και την εμπειρία χρήστη.
 
-<p><strong>Αρχική Οθόνη</p>
+<p>**Αρχική Οθόνη**</p>
 Welcome Page - SignIn Page - Register Page
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/56cfb5fb-8aa9-47da-afda-565e94e6cc80" width="300" />
@@ -39,7 +39,7 @@ Welcome Page - SignIn Page - Register Page
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/f5a468db-8629-4ced-9ceb-6d60dbba27c4" width="300" />
 </p>
 
-**Κύρια Οθόνη**
+<p>**Κύρια Οθόνη**</p>
 Home Page - Popular Page - Tv Series Page
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/bc4ed52a-cdfa-459c-83d3-99610aefa39f" width="300" />
@@ -47,7 +47,7 @@ Home Page - Popular Page - Tv Series Page
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/2b3f1f50-da8f-4898-934e-0fa0c3c954ff" width="300" />
 </p>
 
-**Οθόνη Αναζήτησης**
+<p>**Οθόνη Αναζήτησης**</p>
 Search Page - Media Page - Writing A Review
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/634069b3-6b17-4cb5-bde8-4bfc1ab0f211" width="300" />
@@ -55,7 +55,7 @@ Search Page - Media Page - Writing A Review
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/817fa375-7340-4070-976e-12663385eb33" width="300" />
 </p>
 
-**Επεξεργασία αξιολόγησης**
+<p>**Επεξεργασία αξιολόγησης**</p>
 Editing The Review - Media Page
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/ac436e72-47e3-4c90-a651-0bc5ba857f69" width="300" />
