@@ -1,5 +1,3 @@
-**Android Mobile App - Film Review App - What a Movie!**
-
 ## Κύρια Χαρακτηριστικά
 
 Η Mobile Εφαρμογή έχει αναπτυχθεί σε Android Studio με την χρήση Kotlin & Jetpack Compose για το UI. 
@@ -45,7 +43,7 @@ Welcome Page - SignIn Page - Register Page
 Home Page - Popular Page - Tv Series Page
 <p float="left"> 
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/bc4ed52a-cdfa-459c-83d3-99610aefa39f" width="300" />
-  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/09815bb9-b43a-48f7-9c73-d13b1c9fdebd" width="300" />
+  <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/1f03f072-a0e7-41d7-9abc-49170ddc74f5" width="300" />
   <img src="https://github.com/JimMono98/What-A-Movie/assets/149162918/2b3f1f50-da8f-4898-934e-0fa0c3c954ff" width="300" />
 </p>
 
