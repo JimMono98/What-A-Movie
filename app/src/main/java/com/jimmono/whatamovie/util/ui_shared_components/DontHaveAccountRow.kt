@@ -43,7 +43,7 @@ fun DontHaveAccountRow(
                     fontSize = 18.sp,
                     fontFamily = font,
                     fontWeight = FontWeight(800),
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.surface
                 ),
                 modifier = Modifier.clickable {
                     onSignupTap()

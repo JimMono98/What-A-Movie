@@ -155,7 +155,7 @@ fun SignupScreen(
                                 fontSize = 18.sp,
                                 fontFamily = font,
                                 fontWeight = FontWeight(800),
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.surface
                             ),
                             modifier = Modifier.clickable {
                                 navController.navigate(Route.LOGIN_SCREEN)
