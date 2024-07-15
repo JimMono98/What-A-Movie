@@ -1,7 +1,7 @@
 package com.jimmono.whatamovie.media_details.presentation.details
 
+import android.content.Context
 import android.os.Build
-import android.widget.Space
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -85,7 +85,6 @@ import com.jimmono.whatamovie.util.ui_shared_components.Item
 import com.jimmono.whatamovie.util.ui_shared_components.RatingBar
 import com.jimmono.whatamovie.util.ui_shared_components.RatingChange
 import com.jimmono.whatamovie.util.ui_shared_components.genresProvider
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.jimmono.whatamovie.ui.theme.yellow
 import timber.log.Timber
@@ -967,7 +966,7 @@ fun ReviewItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
 
-            ) {
+                ) {
                 Text(
                     text = "Rating: ${review.rating*2}/10.0",
                     color = yellow,
@@ -1117,6 +1116,3 @@ fun SomethingWentWrong() {
         )
     }
 }
-
-
-

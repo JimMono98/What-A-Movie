@@ -1,6 +1,5 @@
-package com.jimmono.whatamovie.main.presentation.main
+package com.jimmono.whatamovie.main.presentation.user
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,11 +36,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberImagePainter
+import com.jimmono.whatamovie.main.data.remote.firestore.User
+import com.jimmono.whatamovie.main.data.remote.firestore.saveUserInfo
+import com.jimmono.whatamovie.main.presentation.main.MainUiEvents
+import com.jimmono.whatamovie.main.presentation.main.MainUiState
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun UserScreen(
     navController: NavController,
@@ -59,9 +60,20 @@ fun UserScreen(
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         toastMessage = null
     }
+
+    user?.let {
+        val userInfo = User(
+            userId = it.uid,
+            displayName = it.displayName ?: "",
+            email = it.email ?: "",
+            profilePictureUrl = it.photoUrl?.toString()
+        )
+        saveUserInfo(userInfo)
+    }
+
+
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         BoxWithConstraints(
             modifier = Modifier
@@ -69,11 +81,13 @@ fun UserScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
+
             if (maxWidth < maxHeight) {
                 // Portrait layout
                 Column(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(paddingValues),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -109,16 +123,20 @@ fun UserScreen(
                     ) {
                         Text(
                             text = "Username: ",
-                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = font,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold)
+                                fontWeight = FontWeight.Bold
+                            )
                         )
                         Text(
                             text = user?.displayName ?: "No Name",
-                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = font,
-                                fontSize = 18.sp)
+                                fontSize = 18.sp
+                            )
                         )
                     }
 
@@ -131,16 +149,20 @@ fun UserScreen(
                     ) {
                         Text(
                             text = "Email: ",
-                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = font,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold)
+                                fontWeight = FontWeight.Bold
+                            )
                         )
                         Text(
                             text = user?.email ?: "No Email",
-                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = font,
-                                fontSize = 18.sp)
+                                fontSize = 18.sp
+                            )
                         )
                     }
 
@@ -158,9 +180,14 @@ fun UserScreen(
                             .width(200.dp)
                             .padding(vertical = 8.dp)
                     ) {
-                        Text(text = "Edit Profile", style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
-                            fontFamily = font,
-                            fontSize = 16.sp))
+                        Text(
+                            text = "Edit Profile",
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = font,
+                                fontSize = 16.sp
+                            )
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -185,9 +212,11 @@ fun UserScreen(
                     ) {
                         Text(
                             text = "Log Out",
-                            style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = font,
-                                fontSize = 16.sp)
+                                fontSize = 16.sp
+                            )
                         )
                     }
                 }
@@ -196,7 +225,9 @@ fun UserScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
                 ) {
                     Column(
                         modifier = Modifier.weight(1f),
@@ -240,16 +271,20 @@ fun UserScreen(
                         ) {
                             Text(
                                 text = "Username: ",
-                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontFamily = font,
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold)
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
                             Text(
                                 text = user?.displayName ?: "No Name",
-                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontFamily = font,
-                                    fontSize = 18.sp)
+                                    fontSize = 18.sp
+                                )
                             )
                         }
 
@@ -262,35 +297,23 @@ fun UserScreen(
                         ) {
                             Text(
                                 text = "Email: ",
-                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontFamily = font,
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold)
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
                             Text(
                                 text = user?.email ?: "No Email",
-                                style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontFamily = font,
-                                    fontSize = 18.sp)
+                                    fontSize = 18.sp
+                                )
                             )
                         }
 
-                        /*Spacer(modifier = Modifier.height(50.dp))
-
-                        Button(
-                            onClick = {
-                                navController.navigate(Route.EDIT_PROFILE)
-                            },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan),
-                            shape = RoundedCornerShape(50),
-                            modifier = Modifier
-                                .height(60.dp)
-                                .width(200.dp)
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text(text = "History", style = TextStyle(fontSize = 16.sp))
-                        }
-                        */
                         Spacer(modifier = Modifier.height(20.dp))
 
                         // Edit profile button
@@ -305,9 +328,14 @@ fun UserScreen(
                                 .width(200.dp)
                                 .padding(vertical = 8.dp)
                         ) {
-                            Text(text = "Edit Profile", style = TextStyle(color = MaterialTheme.colorScheme.onSurface,
-                                fontFamily = font,
-                                fontSize = 16.sp))
+                            Text(
+                                text = "Edit Profile",
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontFamily = font,
+                                    fontSize = 16.sp
+                                )
+                            )
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))

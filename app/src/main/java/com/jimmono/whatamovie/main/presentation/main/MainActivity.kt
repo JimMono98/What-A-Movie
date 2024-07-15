@@ -3,7 +3,6 @@ package com.jimmono.whatamovie.main.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,7 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.jimmono.whatamovie.main.presentation.intro.LoginScreen
+import com.jimmono.whatamovie.main.presentation.intro.SignupScreen
+import com.jimmono.whatamovie.main.presentation.intro.WelcomeScreen
+import com.jimmono.whatamovie.main.presentation.user.EditProfile
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsScreenEvents
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailsViewModel
 import com.jimmono.whatamovie.media_details.presentation.details.MediaDetailScreen
